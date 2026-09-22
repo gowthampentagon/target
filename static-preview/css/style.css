@@ -1,0 +1,1659 @@
+/* ============================================================
+   Saragarhi Shooting Academy – 51st TN Shooting Championship
+   Master Stylesheet
+   ============================================================ */
+
+/* ---------- Google Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap');
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+  /* Brand Colors */
+  --gold-500:   #4A4A4A;
+  --gold-400:   #6C757D;
+  --gold-300:   #ADB5BD;
+  --gold-100:   #E9ECEF;
+
+  --dark-950:   #08090C;
+  --dark-900:   #0D0F14;
+  --dark-800:   #131720;
+  --dark-700:   #1A2030;
+  --dark-600:   #222A3D;
+  --dark-500:   #2E3A54;
+
+  --olive-600:  #4A5A2C;
+  --olive-500:  #5B7033;
+  --olive-400:  #6D8A3E;
+
+  --accent-red: #C0392B;
+  --success:    #27AE60;
+  --danger:     #E74C3C;
+  --info:       #2980B9;
+
+  --text-primary:   #F0EDE6;
+  --text-secondary: #A8A49C;
+  --text-muted:     #6B6762;
+
+  /* Gradients */
+  --grad-gold:   linear-gradient(135deg, #343A40 0%, #4A4A4A 50%, #343A40 100%);
+  --grad-dark:   linear-gradient(135deg, #0D0F14 0%, #1A2030 100%);
+  --grad-panel:  linear-gradient(145deg, rgba(10,12,18,0.93) 0%, rgba(8,9,14,0.96) 100%);
+  --grad-glass:  linear-gradient(145deg, rgba(20,24,36,0.85) 0%, rgba(10,12,18,0.92) 100%);
+
+  /* SSA Gallery images – background rotation */
+  --img-main:   url('../images/gallery/ssa_gallery_1.jpg');
+  --img-range:  url('../images/gallery/ssa_range_1.jpg');
+  --img-lanes:  url('../images/gallery/ssa_gallery_3.jpg');
+  --img-build:  url('../images/gallery/ssa_action_1.jpg');
+
+  /* Shadows */
+  --shadow-gold:  0 0 30px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.5);
+  --shadow-card:  0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-input: 0 2px 8px rgba(0,0,0,0.3);
+
+  /* Borders */
+  --border-gold:  1px solid rgba(255,255,255,0.08);
+  --border-dark:  1px solid rgba(255,255,255,0.06);
+
+  /* Radius */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+
+  /* Transitions */
+  --trans-fast: 0.15s ease;
+  --trans-mid:  0.3s ease;
+  --trans-slow: 0.5s ease;
+}
+
+/* ============================================================
+   BOOTSTRAP 5 — CSS VARIABLE OVERRIDES
+   Strict Grayscale palette. Gold/yellow entirely removed.
+   All Bootstrap utility classes (.bg-body, .text-body, .border,
+   .bg-secondary, etc.) react automatically via --bs-* tokens.
+   Zero hardcoded colors inside component rules.
+   ============================================================ */
+
+/* ── DARK MODE (default) ─────────────────────────────────────
+   Body:       #121212 (near-black)
+   Containers: #1E1E1E / #212529 / #343A40 (charcoal grays)
+   Text:       #E0E0E0 (primary), #ADB5BD (secondary)
+   Button:     #4A4A4A → hover #5A5A5A (medium gray)
+   ─────────────────────────────────────────────────────────── */
+[data-bs-theme="dark"] {
+  /* Bootstrap core surface tokens */
+  --bs-body-bg:                  #0a0a0a;          /* solid deep black */
+  --bs-body-color:               #FFFFFF;          /* pure white for high contrast */
+  --bs-secondary-bg:             #1A1A1A;          /* charcoal gray card bg */
+  --bs-tertiary-bg:              #262626;          /* inputs/nested fields */
+  --bs-border-color:             rgba(255, 255, 255, 0.15);
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.10);
+  --bs-heading-color:            #FFFFFF;
+  --bs-secondary-color:          #D8D8D8;          /* light gray for readable secondary text */
+  --bs-tertiary-color:           #9E9E9E;          /* medium-light gray for placeholders */
+  --bs-emphasis-color:           #FFFFFF;
+  --bs-link-color:               #D8D8D8;
+  --bs-link-hover-color:         #FFFFFF;
+  color-scheme: dark;
+
+  /* ── SSA semantic surface tokens ── */
+  --ssa-surface-1:    #0a0a0a;          /* page body bg          */
+  --ssa-surface-2:    #1A1A1A;          /* card / panel bg       */
+  --ssa-surface-3:    #262626;          /* input / nested bg     */
+  --ssa-text-1:       #FFFFFF;          /* primary text          */
+  --ssa-text-2:       #D8D8D8;          /* secondary text        */
+  --ssa-text-3:       #9E9E9E;          /* muted / placeholder   */
+  --ssa-border:       rgba(255,255,255,0.15);
+  --ssa-accent:       #4A4A4A;          /* primary btn bg        */
+  --ssa-accent-hover: #5A5A5A;          /* primary btn hover     */
+  --ssa-shadow-card:  0 8px 32px rgba(0,0,0,0.80), 0 2px 8px rgba(0,0,0,0.50);
+  --ssa-shadow-input: 0 2px 8px rgba(0,0,0,0.40);
+  --ssa-scrollbar-track: #1A1A1A;
+  --ssa-scrollbar-thumb: #333333;
+
+  /* Keep legacy SSA brand vars aligned */
+  --text-primary:   var(--ssa-text-1);
+  --text-secondary: var(--ssa-text-2);
+  --text-muted:     var(--ssa-text-3);
+  --grad-panel:     linear-gradient(145deg, rgba(26,26,26,0.97) 0%, rgba(10,10,10,0.99) 100%);
+  --grad-glass:     linear-gradient(145deg, rgba(38,38,38,0.88) 0%, rgba(10,10,10,0.94) 100%);
+  --border-dark:    1px solid var(--ssa-border);
+  --shadow-card:    var(--ssa-shadow-card);
+  --shadow-input:   var(--ssa-shadow-input);
+  --dark-950:       var(--ssa-surface-1);
+  --dark-900:       var(--ssa-surface-2);
+  --dark-800:       var(--ssa-surface-3);
+}
+
+/* ── Component overrides — semantic vars ONLY, no hardcoded colors ── */
+
+/* Body surface */
+body {
+  background-color: var(--ssa-surface-1);
+  color: var(--ssa-text-1);
+}
+
+/* Page background panel */
+.page-bg {
+  background-color: var(--ssa-surface-3);
+}
+
+/* Auth card */
+.auth-card {
+  background: var(--grad-panel);
+  border-color: var(--ssa-border);
+  box-shadow: var(--shadow-card);
+}
+
+/* Input / select / textarea */
+.input-wrap input,
+.input-wrap select,
+.input-wrap textarea {
+  background: var(--ssa-surface-3);
+  border-color: var(--ssa-border);
+  color: var(--ssa-text-1);
+}
+
+.input-wrap input::placeholder,
+.input-wrap textarea::placeholder {
+  color: var(--ssa-text-3);
+}
+
+/* Select dropdown option */
+.input-wrap select option {
+  background: var(--ssa-surface-2);
+  color: var(--ssa-text-1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-track { background: var(--ssa-scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--ssa-scrollbar-thumb); }
+::-webkit-scrollbar-thumb:hover { background: var(--ssa-text-2); }
+
+/* ── Smooth theme transition ──────────────────────────────── */
+/* Scoped to color/bg properties only — does NOT interfere with
+   box-sizing, margin, padding, or transform-based animations.  */
+html, body, .page-wrapper, .page-bg, .auth-card,
+.input-wrap input, .input-wrap select, .input-wrap textarea,
+.msg-box, .btn, .site-header, .site-footer {
+  transition:
+    background-color 0.25s ease,
+    border-color     0.25s ease,
+    color            0.25s ease,
+    box-shadow       0.25s ease;
+}
+
+
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 13px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--ssa-surface-1);
+  color: var(--ssa-text-1);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a { color: var(--ssa-text-2); text-decoration: none; transition: color var(--trans-fast); }
+a:hover { color: var(--ssa-text-1); }
+
+img { max-width: 100%; display: block; }
+
+input, select, textarea, button { font-family: inherit; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--ssa-scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--ssa-scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ssa-text-2); }
+
+/* ============================================================
+   BACKGROUND – SSA Real Photo with cinematic overlay
+   ============================================================ */
+.page-bg {
+  position: fixed; inset: 0; z-index: 0;
+  background-color: var(--ssa-surface-1);
+  overflow: hidden;
+}
+
+/* The actual SSA photo */
+.page-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url('../images/login_bg.jpg');
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  filter: brightness(0.35) saturate(0.70) contrast(1.1);
+}
+
+/* Cinematic gradient overlay – subtle dark tint */
+.page-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(10,10,10,0.60) 0%,
+      rgba(10,10,10,0.40) 30%,
+      rgba(10,10,10,0.40) 70%,
+      rgba(10,10,10,0.80) 100%
+    ),
+    radial-gradient(ellipse 120% 80% at 50% 50%, transparent 0%, rgba(10,10,10,0.70) 100%);
+}
+
+@keyframes slowZoom {
+  0%   { transform: scale(1.04) translateX(0px);   }
+  100% { transform: scale(1.10) translateX(-12px); }
+}
+
+/* Subtle noise texture layer */
+.page-bg-noise {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ============================================================
+   PAGE WRAPPER
+   ============================================================ */
+.page-wrapper {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ============================================================
+   HEADER / BRANDING
+   ============================================================ */
+.site-header {
+  text-align: center;
+  margin-bottom: 36px;
+  animation: fadeDown 0.7s ease both;
+  position: relative;
+}
+
+/* Emblem: circular icon with grayscale ring */
+.site-header .emblem {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  position: relative;
+  /* Grayscale ring */
+  background: var(--ssa-surface-3);
+  padding: 3px;
+  box-shadow: 0 0 0 1px var(--ssa-border), 0 6px 24px rgba(0,0,0,0.6);
+  animation: emblemPulse 4s ease-in-out infinite;
+}
+
+.site-header .emblem-inner {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: var(--ssa-surface-2);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+.site-header .emblem-inner svg {
+  width: 46px; height: 46px;
+  fill: none;
+  stroke: var(--ssa-text-1);
+}
+
+@keyframes emblemPulse {
+  0%, 100% { box-shadow: 0 0 0 1px var(--ssa-border), 0 6px 24px rgba(0,0,0,0.5); }
+  50%       { box-shadow: 0 0 0 4px rgba(255,255,255,0.04), 0 6px 24px rgba(0,0,0,0.5); }
+}
+
+.site-header .org-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(13px, 1.8vw, 17px);
+  font-weight: 700;
+  color: var(--ssa-text-1);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  text-shadow: none;
+}
+
+.site-header .event-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(10px, 1.2vw, 12px);
+  font-weight: 500;
+  color: var(--ssa-text-2);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.site-header .divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px auto 0;
+  width: 240px;
+}
+
+.site-header .divider::before,
+.site-header .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ssa-border), transparent);
+}
+
+.site-header .divider-diamond {
+  width: 6px; height: 6px;
+  background: var(--ssa-text-2);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--grad-panel);
+  border: 1px solid var(--ssa-border);
+  border-radius: var(--radius-xl);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: none;
+  animation: fadeUp 0.7s ease 0.1s both;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Wide card for registration */
+.auth-card.wide {
+  max-width: 860px;
+  padding: 24px 28px;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ssa-surface-3), var(--ssa-text-2), var(--ssa-surface-3));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ssa-text-1);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--ssa-text-2);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   FORM GRID
+   ============================================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+}
+
+.form-grid .col-full  { grid-column: 1 / -1; }
+.form-grid .col-half  { grid-column: span 1; }
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ssa-text-2);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.form-group label .req {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap .i-icon {
+  position: absolute; left: 10px;
+  color: var(--ssa-text-3);
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  transition: color var(--trans-fast);
+  pointer-events: none;
+  z-index: 2; /* Render on top of inputs globally */
+}
+
+.input-wrap input,
+.input-wrap select,
+.input-wrap textarea {
+  width: 100%;
+  background: var(--ssa-surface-3);
+  border: 1px solid var(--ssa-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px 8px 34px;
+  color: var(--ssa-text-1);
+  font-size: 13px;
+  transition: border-color var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input-wrap input[type="date"] {
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
+}
+
+.input-wrap input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.9;
+  display: block;
+}
+
+.input-wrap textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding-top: 12px;
+}
+
+.input-wrap select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236C757D' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.input-wrap select option {
+  background: var(--ssa-surface-2);
+  color: var(--ssa-text-1);
+}
+
+/* Focus state — grayscale, no gold */
+.input-wrap input:focus,
+.input-wrap select:focus,
+.input-wrap textarea:focus {
+  border-color: var(--ssa-text-2);
+  box-shadow: 0 0 0 3px rgba(108,117,125,0.18);
+  background: var(--ssa-surface-2);
+}
+
+.input-wrap:focus-within .i-icon { color: var(--ssa-text-2); }
+
+/* Toggle password */
+.toggle-pw {
+  position: absolute; right: 12px;
+  background: none; border: none; cursor: pointer;
+  color: var(--ssa-text-3);
+  padding: 4px;
+  line-height: 1;
+  transition: color var(--trans-fast);
+  z-index: 2; /* Render on top of inputs globally */
+}
+.toggle-pw:hover { color: var(--ssa-text-1); }
+
+/* Browser Autofill styling override to prevent white backgrounds on autofilled inputs globally */
+.input-wrap input:-webkit-autofill,
+.input-wrap input:-webkit-autofill:hover, 
+.input-wrap input:-webkit-autofill:focus,
+.input-wrap input:-webkit-autofill:active,
+.input-wrap select:-webkit-autofill,
+.input-wrap textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--ssa-text-1) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--ssa-surface-3) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Validation states */
+.input-wrap input.is-invalid,
+.input-wrap select.is-invalid { border-color: var(--danger); }
+.input-wrap input.is-valid,
+.input-wrap select.is-valid   { border-color: var(--success); }
+
+.field-error {
+  font-size: 11px;
+  color: var(--danger);
+  display: none;
+}
+
+.form-group.has-error .field-error { display: block; }
+.form-group.has-error .i-icon      { color: var(--danger); }
+
+/* Readonly / disabled reg-id */
+.input-wrap input[readonly] {
+  background: var(--ssa-surface-3);
+  border-color: var(--ssa-border);
+  color: var(--ssa-text-2);
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all var(--trans-mid);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background var(--trans-fast);
+}
+
+.btn:hover::after { background: rgba(255,255,255,0.06); }
+.btn:active       { transform: translateY(1px); }
+
+/* Primary — Charcoal Grey (dark) / Dark Charcoal (light) */
+.btn-primary {
+  background: var(--ssa-accent);
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.30);
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background: var(--ssa-accent-hover);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.40);
+  transform: translateY(-1px);
+  color: #FFFFFF;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--ssa-border);
+  color: var(--ssa-text-1);
+}
+.btn-outline:hover {
+  background: var(--ssa-surface-3);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ============================================================
+   LINK ROW
+   ============================================================ */
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 11.5px;
+  color: var(--ssa-text-2);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.link-row a { color: var(--ssa-text-2); font-weight: 600; }
+.link-row a:hover { color: var(--ssa-text-1); text-decoration: underline; }
+
+
+
+/* ============================================================
+   ALERT / MESSAGE BOX
+   ============================================================ */
+.msg-box {
+  display: none;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  border-left: 3px solid;
+  animation: fadeIn 0.3s ease;
+}
+
+.msg-box.show { display: flex; align-items: flex-start; gap: 10px; }
+
+.msg-box.success {
+  background: rgba(39,174,96,0.1);
+  border-color: var(--success);
+  color: #5EDD8E;
+}
+
+.msg-box.error {
+  background: rgba(231,76,60,0.1);
+  border-color: var(--danger);
+  color: #FF7F7F;
+}
+
+.msg-box.info {
+  background: rgba(41,128,185,0.1);
+  border-color: var(--info);
+  color: #7EC8F0;
+}
+
+/* ============================================================
+   SECTION DIVIDER (inside registration form)
+   ============================================================ */
+.section-divider {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.section-divider span {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ssa-text-2);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+/* ============================================================
+   REGISTRATION ID BADGE
+   ============================================================ */
+.reg-id-badge {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--ssa-border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  text-align: center;
+  margin-bottom: 24px;
+  display: none;
+}
+
+.reg-id-badge.show { display: block; animation: fadeIn 0.4s ease; }
+
+.reg-id-badge .label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.reg-id-badge .value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ssa-text-1);
+  letter-spacing: 3px;
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+.dashboard-wrap {
+  max-width: 900px;
+  width: 100%;
+}
+
+.dash-header {
+  background: var(--grad-panel);
+  border: 1px solid var(--ssa-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 36px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  animation: fadeDown 0.6s ease both;
+}
+
+.dash-header .welcome {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dash-header .user-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ssa-text-1);
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  animation: fadeUp 0.6s ease 0.15s both;
+}
+
+.info-card {
+  background: var(--grad-panel);
+  border: var(--border-dark);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  transition: border-color var(--trans-mid), transform var(--trans-mid);
+}
+
+.info-card:hover {
+  border-color: rgba(255,255,255,0.07);
+  transform: translateY(-2px);
+}
+
+.info-card .ic-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.info-card .ic-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.info-card .ic-value.gold { color: var(--ssa-text-1); font-family: 'Rajdhani', sans-serif; font-size: 16px; letter-spacing: 2px; }
+
+/* Status badge */
+.status-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.active   { background: rgba(39,174,96,0.15);  color: #5EDD8E;           border: 1px solid rgba(39,174,96,0.3);   }
+.status-badge.pending  { background: rgba(255,255,255,0.05); color: var(--ssa-text-1);   border: 1px solid var(--ssa-border);              }
+.status-badge.inactive { background: rgba(231,76,60,0.10);  color: #FF8C82;           border: 1px solid rgba(231,76,60,0.3);   }
+.status-badge.danger   { background: rgba(231,76,60,0.15);  color: #FF6B6B;           border: 1px solid rgba(231,76,60,0.4);   }
+.status-badge.rejected { background: rgba(231,76,60,0.15);  color: #FF6B6B;           border: 1px solid rgba(231,76,60,0.4);   }
+.status-badge.approved { background: rgba(39,174,96,0.15);  color: #5EDD8E;           border: 1px solid rgba(39,174,96,0.3);   }
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  animation: fadeUp 0.7s ease 0.3s both;
+}
+
+/* ============================================================
+   LOADING SPINNER
+   ============================================================ */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(13,15,20,0.4);
+  border-top-color: var(--dark-900);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+
+.spinner.show { display: block; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   PASSWORD STRENGTH METER
+   ============================================================ */
+.pw-strength {
+  margin-top: 6px;
+  display: none;
+}
+
+.pw-strength.show { display: block; }
+
+.pw-strength .bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--dark-500);
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.pw-strength .fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.3s ease;
+  width: 0%;
+}
+
+.pw-strength .label-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   STEP INDICATOR (for forgot password)
+   ============================================================ */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 28px;
+}
+
+.step-indicator .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.step-indicator .step-circle {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--dark-500);
+  background: var(--dark-800);
+  color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all var(--trans-mid);
+}
+
+.step-indicator .step.active .step-circle  { border-color: var(--ssa-text-2); background: rgba(255,255,255,0.05); color: var(--ssa-text-1); }
+.step-indicator .step.done   .step-circle  { border-color: var(--success);  background: rgba(39,174,96,0.15);  color: var(--success); }
+
+.step-indicator .step-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.step-indicator .step.active .step-label  { color: var(--ssa-text-1); }
+.step-indicator .step.done   .step-label  { color: var(--success); }
+
+.step-indicator .connector {
+  width: 60px; height: 2px;
+  background: var(--dark-500);
+  margin: 0 4px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+  transition: background var(--trans-mid);
+}
+
+.step-indicator .connector.done { background: var(--success); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 680px) {
+  .auth-card,
+  .auth-card.wide { padding: 28px 20px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .col-half { grid-column: 1 / -1; }
+  .dash-header { padding: 20px; }
+}
+
+@media (max-width: 420px) {
+  .site-header .org-name { font-size: 23px; }
+  .link-row { flex-direction: column; text-align: center; }
+}
+
+
+/* ============================================================
+   PREMIUM DESIGN UPGRADE - SSA Institutional Theme
+   ============================================================ */
+
+/* -- Auth card: deeper glass effect -- */
+.auth-card {
+  background: linear-gradient(145deg, rgba(10,12,18,0.90) 0%, rgba(8,9,14,0.95) 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.04) inset;
+}
+
+.auth-card::before {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #343A40 30%, #6C757D 50%, #343A40 70%, transparent 100%);
+}
+
+/* -- Dashboard wrapper -- */
+.dashboard-wrap { max-width: 980px; }
+
+/* -- Dash header with photo watermark -- */
+.dash-header {
+  background: linear-gradient(135deg, rgba(8,9,14,0.94) 0%, rgba(18,22,36,0.92) 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  
+  box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.04) inset;
+  overflow: hidden;
+  position: relative;
+}
+
+.dash-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #343A40 20%, #6C757D 50%, #343A40 80%, transparent);
+}
+
+.dash-header::after {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0; width: 40%;
+  background-image: url('../images/gallery/ssa_gallery_1.jpg');
+  background-size: cover;
+  background-position: center left;
+  opacity: 0.05;
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+  pointer-events: none;
+}
+
+/* -- Stat cards -- */
+.stat-card {
+  background: linear-gradient(145deg, rgba(12,14,22,0.92) 0%, rgba(8,10,16,0.96) 100%);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  display: flex; align-items: center; gap: 18px;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  
+  position: relative; overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  opacity: 0; transition: opacity 0.25s ease;
+}
+
+.stat-card:hover { border-color: rgba(255,255,255,0.06); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.03); }
+.stat-card:hover::before { opacity: 1; }
+
+.stat-card .stat-icon {
+  width: 46px; height: 46px; border-radius: 10px;
+  background: rgba(255,255,255,0.04); color: var(--ssa-text-1);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-card .stat-info h4 {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;
+}
+
+.stat-card .stat-info .val {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1;
+}
+
+/* -- Info cards -- */
+.info-card {
+  background: linear-gradient(145deg, rgba(12,14,22,0.88) 0%, rgba(8,10,16,0.93) 100%);
+  border: 1px solid rgba(255,255,255,0.07);
+  
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.info-card:hover {
+  border-color: rgba(255,255,255,0.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 16px rgba(255,255,255,0.03);
+  transform: translateY(-3px);
+}
+
+/* -- Photo strip -- */
+.ssa-photo-strip {
+  width: 100%; display: grid;
+  grid-template-columns: 2fr 1fr 1fr; gap: 6px;
+  border-radius: var(--radius-md); overflow: hidden;
+  margin-bottom: 22px; height: 160px;
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+
+.ssa-photo-strip .strip-img {
+  background-size: cover; background-position: center;
+  background-repeat: no-repeat; position: relative; overflow: hidden;
+}
+
+.ssa-photo-strip .strip-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(8,9,14,0.7) 100%);
+}
+
+.ssa-photo-strip .strip-img-1 { background-image: url('../images/gallery/ssa_gallery_1.jpg'); }
+.ssa-photo-strip .strip-img-2 { background-image: url('../images/gallery/ssa_range_1.jpg'); }
+.ssa-photo-strip .strip-img-3 { background-image: url('../images/gallery/ssa_gallery_3.jpg'); }
+
+.ssa-photo-strip .strip-label {
+  position: absolute; bottom: 8px; left: 10px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(255,255,255,0.65); z-index: 1;
+}
+
+/* -- Table -- */
+.table-wrap {
+  background: linear-gradient(145deg, rgba(10,12,18,0.85) 0%, rgba(8,10,16,0.90) 100%);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-md);
+  overflow: hidden; 
+}
+
+.admin-table thead tr {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+}
+
+.admin-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+/* -- Modal -- */
+.modal {
+  box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.05) inset;
+}
+
+/* -- Action buttons -- */
+.dash-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+
+.dash-action-btn {
+  flex: 1; min-width: 200px;
+  background: linear-gradient(145deg, rgba(12,14,22,0.90) 0%, rgba(8,10,16,0.95) 100%);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md);
+  padding: 22px 24px; display: flex; align-items: center; gap: 16px;
+  cursor: pointer; text-decoration: none; color: var(--text-primary);
+  transition: all 0.25s ease; position: relative; overflow: hidden;
+  
+}
+
+.dash-action-btn::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(135deg, #343A40 0%, #4A4A4A 50%, #343A40 100%); opacity: 0; transition: opacity 0.25s ease;
+}
+
+.dash-action-btn:hover { border-color: rgba(255,255,255,0.07); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.5); color: var(--ssa-text-1); }
+.dash-action-btn:hover::before { opacity: 1; }
+
+.dash-action-btn .btn-icon-wrap {
+  width: 44px; height: 44px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ssa-text-1); flex-shrink: 0;
+}
+
+.dash-action-btn .btn-text strong {
+  display: block; font-family: 'Rajdhani', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; margin-bottom: 2px;
+}
+
+.dash-action-btn .btn-text small { font-size: 11px; color: var(--text-muted); }
+
+/* -- Championship band -- */
+.championship-band {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02), rgba(255,255,255,0.03));
+  border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 6px 20px; text-align: center;
+  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 2.5px; color: rgba(255,255,255,0.35);
+  text-transform: uppercase; margin-bottom: 20px;
+}
+
+/* -- Admin sidebar -- */
+.admin-sidebar {
+  background: linear-gradient(180deg, rgba(6,7,12,0.98) 0%, rgba(10,12,20,0.98) 100%);
+  border-right: 1px solid rgba(255,255,255,0.04);
+}
+
+/* -- Responsive -- */
+@media (max-width: 760px) {
+  .ssa-photo-strip { grid-template-columns: 1fr; height: 120px; }
+  .ssa-photo-strip .strip-img-2, .ssa-photo-strip .strip-img-3 { display: none; }
+}
+
+/* ============================================================
+   GOOGLE FORM-STYLE UPLOAD BOXES
+   ============================================================ */
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1.5px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-align: center;
+  position: relative;
+}
+
+.upload-box:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--ssa-text-1);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+.upload-box.has-file {
+  border-style: solid;
+  border-color: rgba(39, 174, 96, 0.4);
+  background: rgba(39, 174, 96, 0.02);
+}
+
+.upload-box-icon {
+  margin-bottom: 8px;
+  color: var(--ssa-text-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.upload-box:hover .upload-box-icon {
+  transform: translateY(-2px);
+}
+
+.upload-box-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.upload-box-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.upload-box-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.upload-file-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.upload-file-info .file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.upload-file-info .file-remove {
+  background: none;
+  border: none;
+  color: #E74C3C;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 14px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.upload-file-info .file-remove:hover {
+  color: #c0392b;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN PAGE — COMPLETE STYLES
+   Scoped to body.login-page — zero impact on any other page
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Background: SSA Building Photo ── */
+.login-page .page-bg::before {
+  background-image: url('../images/login_bg.jpg') !important;
+  background-size: 100% 100% !important;        /* Fits both width and height to cover full screen with complete zoomed-out layout */
+  background-position: center center !important; /* Centered background image */
+  background-repeat: no-repeat !important;
+  background-color: #050505 !important;
+  filter: brightness(0.35) saturate(0.95) contrast(1.0) !important; /* Decreased brightness */
+}
+
+/* ── Gradient overlay: left open, right black panel for card ── */
+.login-page .page-bg::after {
+  background:
+    linear-gradient(90deg,
+      rgba(5,5,5,0.10)  0%,
+      rgba(5,5,5,0.12) 45%,
+      rgba(5,5,5,0.88) 68%,
+      rgba(5,5,5,0.97) 100%
+    ) !important;
+}
+
+/* ════════════════════════════════════════════════════
+   TEXT VISIBILITY — white on dark (both PC + Mobile)
+   ════════════════════════════════════════════════════ */
+
+
+/* Org name */
+.login-page .site-header .org-name {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.9) !important;
+}
+/* Event subtitle */
+.login-page .site-header .event-title {
+  color: rgba(255,255,255,0.80) !important;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8) !important;
+}
+/* Emblem icon + ring */
+.login-page .site-header .emblem {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.22), 0 4px 18px rgba(0,0,0,0.75) !important;
+  background: rgba(15,15,18,0.80) !important;
+}
+.login-page .site-header .emblem-inner {
+  background: rgba(20,20,25,0.90) !important;
+}
+.login-page .site-header .emblem-inner svg {
+  stroke: #ffffff !important;
+}
+/* Divider */
+.login-page .site-header .divider::before,
+.login-page .site-header .divider::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent) !important;
+}
+.login-page .site-header .divider-diamond {
+  background: rgba(255,255,255,0.45) !important;
+}
+
+/* Card background — solid black-grey */
+.login-page .auth-card {
+  background: rgba(10,10,14,0.93) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.80) !important;
+}
+/* Card top accent line */
+.login-page .auth-card::before {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent) !important;
+}
+
+/* Card title */
+.login-page .card-title {
+  color: #ffffff !important;
+  text-align: center !important;
+}
+/* Card subtitle */
+.login-page .card-subtitle {
+  color: rgba(255,255,255,0.65) !important;
+  text-align: center !important;
+}
+/* Form labels */
+.login-page .form-group label {
+  color: rgba(255,255,255,0.85) !important;
+}
+/* Required asterisk */
+.login-page .req {
+  color: #e05252 !important;
+}
+/* Input fields — dark bg, white text, VISIBLE placeholder */
+.login-page .input-wrap input {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #ffffff !important;
+  padding-left: 36px !important; /* Ensure spacing from icon */
+}
+.login-page .input-wrap input::placeholder {
+  color: rgba(255,255,255,0.65) !important; /* Placeholder now highly visible */
+}
+.login-page .input-wrap input:focus {
+  border-color: rgba(255,255,255,0.30) !important;
+  background: rgba(255,255,255,0.10) !important;
+}
+/* Input icons — forced z-index: 2 so the input background doesn't cover them */
+.login-page .input-wrap .i-icon,
+.login-page .input-wrap svg.i-icon {
+  stroke: rgba(255,255,255,0.70) !important;
+  color: rgba(255,255,255,0.70) !important;
+  z-index: 2 !important;
+}
+/* Eye toggle — forced z-index: 2 so input background doesn't cover it */
+.login-page .toggle-pw,
+.toggle-pw {
+  z-index: 2 !important;
+}
+.login-page .toggle-pw svg {
+  fill: rgba(255,255,255,0.65) !important;
+}
+
+/* Links row — New Registration LEFT · Forgot Password RIGHT */
+.login-page .link-row {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.login-page .link-row a {
+  color: rgba(255,255,255,0.72) !important;
+}
+.login-page .link-row a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
+/* Footer text */
+.login-page .site-footer,
+.login-page .site-footer p {
+  color: rgba(255,255,255,0.55) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   MOBILE ONLY (< 768px) — compact, centered layout
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 767.98px) {
+
+  .login-page .page-bg::before {
+    background-size: cover !important;
+    background-position: center center !important;
+  }
+  .login-page .page-bg::after {
+    background: linear-gradient(180deg,
+      rgba(5,5,5,0.50) 0%,
+      rgba(5,5,5,0.82) 100%
+    ) !important;
+  }
+
+  .login-page .page-wrapper {
+    padding: 20px 12px !important;
+    align-items: center !important;
+  }
+  .login-page .site-header,
+  .login-page .site-footer,
+  .login-page main {
+    max-width: 340px !important; /* Smaller mobile width */
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  .login-page .site-header {
+    margin-bottom: 12px !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .login-page .site-header .emblem {
+    width: 44px !important; /* Smaller emblem */
+    height: 44px !important;
+    margin: 0 auto 8px !important;
+  }
+  .login-page .site-header .org-name {
+    letter-spacing: 1px !important;
+    white-space: nowrap !important;
+  }
+  .login-page .site-header .event-title {
+    letter-spacing: 0.5px !important;
+    white-space: nowrap !important;
+  }
+  .login-page .site-header .divider {
+    width: 100px !important;
+    margin: 6px auto 0 !important;
+  }
+  .login-page .auth-card {
+    padding: 16px 14px !important; /* Sleek padding */
+  }
+  .login-page .card-title {
+    margin-bottom: 2px !important;
+  }
+  .login-page .card-subtitle {
+    margin-bottom: 12px !important;
+  }
+  .login-page .form-group {
+    margin-bottom: 8px !important;
+  }
+  .login-page .form-group label {
+    margin-bottom: 3px !important;
+  }
+  .login-page .input-wrap input {
+    padding-left: 34px !important;
+  }
+  .login-page .input-wrap .i-icon {
+    left: 10px !important;
+  }
+  .login-page .btn-primary {
+    margin-top: 10px !important;
+    background: #ffffff !important;
+    color: #0d0f14 !important;
+    font-weight: 700 !important;
+    border: 1px solid #ffffff !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.2s ease-in-out !important;
+  }
+  .login-page .btn-primary:hover {
+    background: #e9ecef !important;
+    color: #08090c !important;
+    box-shadow: 0 6px 18px rgba(255, 255, 255, 0.25) !important;
+  }
+  .login-page .link-row {
+    margin-top: 10px !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+  }
+  .login-page .site-footer {
+    text-align: center !important;
+    margin-top: 12px !important;
+  }
+  .login-page .site-footer p {
+    font-size: 10px !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════
+   PC / DESKTOP ONLY (>= 768px) — right-side layout
+   ═══════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+
+  /* Push all content to right side */
+  .login-page .page-wrapper {
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 40px 5% 40px 0 !important;
+  }
+
+  /* Column width — 350px (extremely sleek card) */
+  .login-page .site-header,
+  .login-page .site-footer,
+  .login-page main {
+    width: 350px !important;
+    max-width: 350px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Header centered inside 350px column */
+  .login-page .site-header {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    margin-bottom: 14px !important;
+  }
+  .login-page .site-header .emblem {
+    width: 48px !important;
+    height: 48px !important;
+    margin: 0 auto 10px !important;
+  }
+  .login-page .site-header .org-name {
+    letter-spacing: 1.5px !important;
+    white-space: nowrap !important;
+  }
+  .login-page .site-header .event-title {
+    letter-spacing: 1px !important;
+    white-space: nowrap !important;
+    margin-top: 3px !important;
+  }
+  .login-page .site-header .divider {
+    width: 140px !important;
+    margin: 8px auto 0 !important;
+    justify-content: center !important;
+  }
+
+  /* Card */
+  .login-page .auth-card {
+    width: 100% !important;
+    max-width: 350px !important;
+    padding: 24px 26px !important;
+  }
+  .login-page .card-title {
+    margin-bottom: 2px !important;
+  }
+  .login-page .card-subtitle {
+    margin-bottom: 16px !important;
+  }
+  .login-page .form-group label {
+    margin-bottom: 3px !important;
+  }
+  .login-page .btn-primary {
+    margin-top: 12px !important;
+    background: #ffffff !important;
+    color: #0d0f14 !important;
+    font-weight: 700 !important;
+    border: 1px solid #ffffff !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.2s ease-in-out !important;
+  }
+  .login-page .btn-primary:hover {
+    background: #e9ecef !important;
+    color: #08090c !important;
+    box-shadow: 0 6px 18px rgba(255, 255, 255, 0.25) !important;
+    transform: translateY(-1px) !important;
+  }
+  .login-page .link-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 10px !important;
+  }
+
+  /* Footer */
+  .login-page .site-footer {
+    text-align: center !important;
+    margin-top: 16px !important;
+    width: 100% !important;
+    max-width: 380px !important;
+  }
+  .login-page .site-footer p {
+    white-space: normal !important;
+    word-break: normal !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
+  }
+
+  /* PC overlay: left open, right black for card */
+  .login-page .page-bg::after {
+    background:
+      linear-gradient(90deg,
+        rgba(5,5,5,0.08)  0%,
+        rgba(5,5,5,0.10) 42%,
+        rgba(5,5,5,0.90) 70%,
+        rgba(5,5,5,0.97) 100%
+      ) !important;
+  }
+}
+
+
+/* end of login page styles */
+
+
+
+
+

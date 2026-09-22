@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to the 51st Tamil Nadu Shooting Championship portal.">
+  <meta name="robots" content="index, follow">
+  <title>Login | 51st Tamil Nadu State Shooting Championship</title>
+  <link rel="icon" href="../images/logo.png" type="image/png">
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="login-page">
+
+<!-- SSA Photo Background -->
+<div class="page-bg" aria-hidden="true"></div>
+<div class="page-bg-noise" aria-hidden="true"></div>
+
+<div class="page-wrapper">
+
+  <!-- Branding header -->
+  <header class="site-header">
+    <div class="emblem" aria-hidden="true" style="border:none; background:transparent;">
+      <div class="emblem-inner" style="border:none; background:transparent;">
+        <img src="../images/logo.png" alt="TARGET Logo" style="width:58px; height:58px; object-fit:contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">
+      </div>
+    </div>
+    <p class="org-name" style="margin-bottom:0; line-height:1.1; font-size: 24px; letter-spacing: 2px; font-weight: 700; color: var(--gold-400, #c9a84c);">TARGET</p>
+    <span class="org-expansion" style="display:block; font-size:10px; color:var(--text-secondary, #a0aec0); letter-spacing:0.5px; margin-top:1px; margin-bottom:8px; font-weight:600; text-transform:uppercase; line-height:1.2;">Tournament Administration and Registration Gateway for Event Tracking</span>
+    <p class="event-title">51st Tamil Nadu State Shooting Championship</p>
+    <div class="divider" aria-hidden="true"><span class="divider-diamond"></span></div>
+  </header>
+
+  <!-- LOGIN CARD -->
+  <main>
+    <div style="max-width: 440px; margin: 0 auto 12px; text-align: left;">
+      <a href="index.html" style="color: var(--gold-400, #ADB5BD); text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Return to Main Portal
+      </a>
+    </div>
+    <div class="auth-card" role="main">
+      <div class="card-title">Portal Login</div>
+      <p class="card-subtitle">Sign in to access your dashboard</p>
+
+      <!-- Message Box -->
+      <div class="msg-box" id="msgBox" role="alert" aria-live="polite"></div>
+
+      <form id="loginForm" novalidate autocomplete="off">
+        <input type="hidden" name="csrf_token" value="demo_preview_token">
+
+        <!-- Email / Username -->
+        <div class="form-group" style="margin-bottom:18px;">
+          <label for="email">Registered Email <span class="req">*</span></label>
+          <div class="input-wrap">
+            <!-- Email icon -->
+            <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="yourname@email.com"
+              autocomplete="email"
+              data-rules="required|email"
+              maxlength="180"
+            >
+          </div>
+          <span class="field-error"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group" style="margin-bottom:8px;">
+          <label for="password">Password <span class="req">*</span></label>
+          <div class="input-wrap">
+            <!-- Lock icon -->
+            <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              data-rules="required|minLen:6"
+              maxlength="100"
+            >
+            <button type="button" class="toggle-pw" aria-label="Toggle password visibility" title="Show/Hide password">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+              </svg>
+            </button>
+          </div>
+          <span class="field-error"></span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary" id="loginBtn" style="margin-top:24px;">
+          <div class="spinner"></div>
+          <span class="btn-label">Sign In</span>
+        </button>
+
+        <!-- Links row -->
+        <div class="link-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <a href="register.html" id="registerLink">
+            &#43; New Registration
+          </a>
+          <a href="forgot_password.html" id="forgotLink">
+            Forgot Password?
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p style="font-weight:700; color:var(--gold-400, #c9a84c); margin-bottom:2px;">&copy; 2026 TARGET</p>
+    <p style="font-size:11px; opacity:0.85; margin:3px 0; line-height:1.4;">Tournament Administration and Registration Gateway for Event Tracking &nbsp;&middot;&nbsp; All Rights Reserved</p>
+    <p style="margin-top:3px; font-size:11.5px; opacity:0.85; line-height:1.4;">51st Tamil Nadu State Shooting Championship &nbsp;&middot;&nbsp; Official Portal</p>
+  </footer>
+
+</div><!-- /.page-wrapper -->
+
+<!-- Scripts -->
+<script>
+// Floating particles
+function initParticles() {
+  const bg = document.querySelector('.page-bg');
+  if (!bg) return;
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = [
+      `left:${Math.random() * 100}%`,
+      `animation-duration:${8 + Math.random() * 12}s`,
+      `animation-delay:${Math.random() * -15}s`,
+      `width:${1 + Math.random() * 2}px`,
+      `height:${1 + Math.random() * 2}px`,
+      `opacity:${0.2 + Math.random() * 0.4}`,
+    ].join(';');
+    bg.appendChild(p);
+  }
+}
+
+// Password toggle
+document.querySelectorAll('.toggle-pw').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = btn.closest('.input-wrap').querySelector('input');
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+    btn.innerHTML = isText
+      ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>'
+      : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/></svg>';
+  });
+});
+
+// Form validation & submission simulation
+const loginForm = document.getElementById('loginForm');
+const msgBox = document.getElementById('msgBox');
+
+function markField(input, valid, msg = '') {
+  const group = input.closest('.form-group');
+  const errEl = group?.querySelector('.field-error');
+  input.classList.toggle('is-invalid', !valid);
+  input.classList.toggle('is-valid', valid);
+  if (group) group.classList.toggle('has-error', !valid);
+  if (errEl) errEl.textContent = valid ? '' : msg;
+}
+
+loginForm.querySelectorAll('input').forEach(inp => {
+  inp.addEventListener('input', () => {
+    if (inp.classList.contains('is-invalid')) {
+      inp.classList.remove('is-invalid');
+      const group = inp.closest('.form-group');
+      if (group) group.classList.remove('has-error');
+      const errEl = group?.querySelector('.field-error');
+      if (errEl) errEl.textContent = '';
+    }
+  });
+});
+
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const btn = document.getElementById('loginBtn');
+
+  if (!email.value.trim() || !email.value.includes('@')) {
+    markField(email, false, 'Enter a valid registered email address.');
+    valid = false;
+  } else {
+    markField(email, true);
+  }
+
+  if (!password.value || password.value.length < 6) {
+    markField(password, false, 'Password must be at least 6 characters.');
+    valid = false;
+  } else {
+    markField(password, true);
+  }
+
+  if (!valid) return;
+
+  // Show loading spinner
+  btn.classList.add('btn-loading');
+  const spinner = btn.querySelector('.spinner');
+  const label = btn.querySelector('.btn-label');
+  if (spinner) spinner.classList.add('show');
+  if (label) label.style.display = 'none';
+
+  msgBox.className = 'msg-box';
+  msgBox.innerHTML = '';
+
+  setTimeout(() => {
+    if (spinner) spinner.classList.remove('show');
+    if (label) label.style.display = '';
+    btn.classList.remove('btn-loading');
+
+    msgBox.className = 'msg-box show success';
+    msgBox.innerHTML = '<span>✔</span><span>Login validated successfully! (Static Preview Mode)</span>';
+  }, 1000);
+});
+
+document.addEventListener('DOMContentLoaded', initParticles);
+</script>
+</body>
+</html>

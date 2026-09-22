@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Register as a participant for the 51st Tamil Nadu Shooting Championship.">
+  <meta name="robots" content="index, follow">
+  <title>New Registration | 51st Tamil Nadu State Shooting Championship</title>
+  <link rel="icon" href="../images/logo.png" type="image/png">
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    .form-group.has-error .custom-file-upload-wrap {
+      border-color: #E74C3C !important;
+      background: rgba(231,76,60,0.02) !important;
+    }
+    #first_name, #last_name, #father_guardian_name, #address, #club_name, #association, #membership_id, #district, #gender {
+      text-transform: uppercase;
+    }
+    .btn-outline .spinner {
+      border: 2px solid rgba(255, 255, 255,0.3);
+      border-top-color: var(--gold-400);
+    }
+  </style>
+</head>
+<body>
+
+<!-- SSA Photo Background -->
+<div class="page-bg" aria-hidden="true"></div>
+<div class="page-bg-noise" aria-hidden="true"></div>
+
+<div class="page-wrapper">
+
+  <!-- Branding header -->
+  <header class="site-header">
+    <div class="emblem" aria-hidden="true" style="border:none; background:transparent;">
+      <div class="emblem-inner" style="border:none; background:transparent;">
+        <img src="../images/logo.png" alt="TARGET Logo" style="width:58px; height:58px; object-fit:contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">
+      </div>
+    </div>
+    <p class="org-name" style="margin-bottom:0; line-height:1.1; font-size: 24px; letter-spacing: 2px; font-weight: 700; color: var(--gold-400, #c9a84c);">TARGET</p>
+    <span class="org-expansion" style="display:block; font-size:10px; color:var(--text-secondary, #a0aec0); letter-spacing:0.5px; margin-top:1px; margin-bottom:8px; font-weight:600; text-transform:uppercase; line-height:1.2;">Tournament Administration and Registration Gateway for Event Tracking</span>
+    <p class="event-title">51st Tamil Nadu State Shooting Championship</p>
+    <div class="divider" aria-hidden="true"><span class="divider-diamond"></span></div>
+  </header>
+
+  <!-- REGISTRATION CARD -->
+  <main>
+    <div style="max-width: 680px; margin: 0 auto 12px; text-align: left;">
+      <a href="index.html" style="color: var(--gold-400, #ADB5BD); text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Return to Main Portal
+      </a>
+    </div>
+    <div class="auth-card wide" role="main">
+      <div class="card-title">Participant Registration</div>
+      <p class="card-subtitle">Fill all fields carefully — your details will appear on your entry card.</p>
+
+      <!-- Message Box -->
+      <div class="msg-box" id="msgBox" role="alert" aria-live="polite"></div>
+
+      <form id="registerForm" novalidate autocomplete="off" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="demo_preview_token">
+
+        <div class="form-grid">
+
+          <!-- ── SECTION: Profile & Identity ─────────────────── -->
+          <div class="section-divider col-full">
+            <span>Profile &amp; Identity</span>
+          </div>
+
+          <!-- 1. First Name -->
+          <div class="form-group col-half">
+            <label for="first_name">First Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+              <input type="text" id="first_name" name="first_name" placeholder="First name" data-rules="required|name" maxlength="100">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 2. Last Name (Optional) -->
+          <div class="form-group col-half">
+            <label for="last_name">Last Name</label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+              <input type="text" id="last_name" name="last_name" placeholder="Last name (optional)" data-rules="name1" maxlength="100">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 3. Date of Birth -->
+          <div class="form-group col-half">
+            <label for="dob">Date of Birth <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input type="date" id="dob" name="dob" data-rules="required|dob" max="2016-01-01" min="1920-01-01">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 4. Gender -->
+          <div class="form-group col-half">
+            <label for="gender">Gender <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/></svg>
+              <select id="gender" name="gender" data-rules="required">
+                <option value="">-- SELECT GENDER --</option>
+                <option value="Male">MALE</option>
+                <option value="Female">FEMALE</option>
+                <option value="Transgender">TRANSGENDER</option>
+              </select>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 5. Father / Guardian Name -->
+          <div class="form-group col-half">
+            <label for="father_guardian_name">Father / Guardian Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+              <input type="text" id="father_guardian_name" name="father_guardian_name" placeholder="Father / guardian full name" data-rules="required|name" maxlength="200">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 5a. Profile Photo -->
+          <div class="form-group col-half">
+            <label for="photo">Profile Photo <span class="req">*</span></label>
+            <div class="upload-container">
+              <div class="upload-box" onclick="document.getElementById('photo').click();">
+                <div class="upload-box-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <div class="upload-box-text">Add Profile Photo</div>
+                <div class="upload-box-desc">JPG, PNG, GIF, WebP up to 2MB</div>
+                <input type="file" id="photo" name="photo" accept=".jpg,.jpeg,.png,.gif,.webp" data-rules="required" style="display:none;" onchange="handlePhotoUpload(this)">
+              </div>
+              <div class="upload-file-info" id="photo_info" style="display:none; margin-top:8px; display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:6px;">
+                <span class="file-name" id="photo_name" style="font-size:12px; color:var(--gold-400);"></span>
+                <button type="button" class="file-remove" onclick="clearUpload('photo'); event.stopPropagation();" style="background:none; border:none; color:#e74c3c; cursor:pointer;">✖</button>
+              </div>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- ── SECTION: Contact Details ────────────────────── -->
+          <div class="section-divider col-full">
+            <span>Contact Details</span>
+          </div>
+
+          <!-- 6. Email -->
+          <div class="form-group col-half">
+            <label for="email">Email Address <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="email" name="email" placeholder="you@example.com" data-rules="required|email" maxlength="180" autocomplete="email">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 7. Phone -->
+          <div class="form-group col-half">
+            <label for="phone">Mobile Number <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 9.21 19.79 19.79 0 0 1 1 .82 2 2 0 0 1 2.82 0h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L6.91 7.91a16 16 0 0 0 9.09 9.09l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 24 18v.92z" transform="scale(0.92) translate(1,1)"/></svg>
+              <input type="tel" id="phone" name="phone" placeholder="10-digit mobile" data-rules="required|phone" maxlength="10" autocomplete="tel">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 8. Aadhaar Number -->
+          <div class="form-group col-full">
+            <label for="aadhaar_number">Aadhaar Card Number <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              <input type="text" id="aadhaar_number" name="aadhaar_number" placeholder="XXXX XXXX XXXX" data-rules="required|aadhaar" maxlength="14" inputmode="numeric">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 9. Address -->
+          <div class="form-group col-full">
+            <label for="address">Full Address <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="top:14px;position:absolute;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              <textarea id="address" name="address" placeholder="Door No., Street, City, PIN" data-rules="required|minLen:10" rows="3" maxlength="500" style="padding-left:42px;"></textarea>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- ── SECTION: Special Category ──────────────────── -->
+          <div class="section-divider col-full">
+            <span>Special Category</span>
+          </div>
+
+          <!-- Para Athlete Toggle -->
+          <div class="form-group col-half">
+            <label style="color:var(--text-secondary);font-weight:600;margin-bottom:8px;display:block;font-size:13px;">Are you a Para Athlete? <span class="req">*</span></label>
+            <div style="display:flex;gap:0;border:1px solid rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;">
+              <label id="lbl_para_yes" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(255,255,255,0.03);color:var(--text-muted);border-right:1px solid rgba(255,255,255,0.08);">
+                <input type="radio" name="is_para" id="is_para_yes" value="1" style="display:none;" onchange="toggleSpecialLabel('para',true)"> ✓ Yes
+              </label>
+              <label id="lbl_para_no" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(255, 255, 255,0.12);color:var(--gold-400);">
+                <input type="radio" name="is_para" id="is_para_no" value="0" checked style="display:none;" onchange="toggleSpecialLabel('para',false)"> ✗ No
+              </label>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- Deaf Athlete Toggle -->
+          <div class="form-group col-half">
+            <label style="color:var(--text-secondary);font-weight:600;margin-bottom:8px;display:block;font-size:13px;">Are you a Deaf Athlete? <span class="req">*</span></label>
+            <div style="display:flex;gap:0;border:1px solid rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;">
+              <label id="lbl_deaf_yes" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(255,255,255,0.03);color:var(--text-muted);border-right:1px solid rgba(255,255,255,0.08);">
+                <input type="radio" name="is_deaf" id="is_deaf_yes" value="1" style="display:none;" onchange="toggleSpecialLabel('deaf',true)"> ✓ Yes
+              </label>
+              <label id="lbl_deaf_no" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(255, 255, 255,0.12);color:var(--gold-400);">
+                <input type="radio" name="is_deaf" id="is_deaf_no" value="0" checked style="display:none;" onchange="toggleSpecialLabel('deaf',false)"> ✗ No
+              </label>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- Disability Proof Certificate -->
+          <div class="form-group col-full" id="disability_proof_group" style="display:none;">
+            <label for="disability_proof">Disability Certificate / Proof <span class="req">*</span></label>
+            <div class="custom-file-upload-wrap" onclick="document.getElementById('disability_proof').click();" style="position:relative; width:100%; height:46px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); border-radius:8px; display:flex; align-items:center; padding:0 14px; cursor:pointer; transition:all 0.2s ease-in-out;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--gold-400); margin-right:10px; flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              <span id="disability_proof_label" style="font-size:13px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-grow:1; font-weight:500;">Upload File</span>
+              <input type="file" id="disability_proof" name="disability_proof" accept=".jpg,.jpeg,.png,.pdf" style="display:none;" onchange="handleCustomFileUpload(this, 'disability_proof_label')">
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;padding-left:4px;">JPG, PNG or PDF up to 2MB</div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- ── SECTION: Club & Affiliation ─────────────────── -->
+          <div class="section-divider col-full">
+            <span>Club &amp; Association</span>
+          </div>
+
+          <!-- 10. Club Name -->
+          <div class="form-group col-half">
+            <label for="club_name">Club Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <select id="club_name" name="club_name" data-rules="required">
+                <option value="">-- SELECT CLUB --</option>
+                <option value="ACE SHOOTERS CLUB">ACE SHOOTERS CLUB</option>
+                <option value="ANUGRAHAA SHOOTING ACADEMY">ANUGRAHAA SHOOTING ACADEMY</option>
+                <option value="ARUN'S AIR GUN SHOOTING ACADEMY">ARUN'S AIR GUN SHOOTING ACADEMY</option>
+                <option value="BELL RIFLE ACADEMY">BELL RIFLE ACADEMY</option>
+                <option value="BORN SHOOTERS ACADEMY">BORN SHOOTERS ACADEMY</option>
+                <option value="BRIGADE SHOOTERS CLUB">BRIGADE SHOOTERS CLUB</option>
+                <option value="BT SPORTS ACADEMY">BT SPORTS ACADEMY</option>
+                <option value="BULLSEYE BREAK CLUB MADURAI NORTH">BULLSEYE BREAK CLUB MADURAI NORTH</option>
+                <option value="BULLSEYE SHOOTING ACADEMY">BULLSEYE SHOOTING ACADEMY</option>
+                <option value="CHAKRA VYUGAM RIFLE CLUB">CHAKRA VYUGAM RIFLE CLUB</option>
+                <option value="CHENGALPATTU RIFLE CLUB">CHENGALPATTU RIFLE CLUB</option>
+                <option value="CHENNAI RIFLE CLUB">CHENNAI RIFLE CLUB</option>
+                <option value="COIMBATORE RIFLE CLUB">COIMBATORE RIFLE CLUB</option>
+                <option value="DINDIGUL RIFLE CLUB">DINDIGUL RIFLE CLUB</option>
+                <option value="ERODE RIFLE CLUB">ERODE RIFLE CLUB</option>
+                <option value="MADURAI RIFLE CLUB">MADURAI RIFLE CLUB</option>
+                <option value="SALEM RIFLE CLUB">SALEM RIFLE CLUB</option>
+                <option value="TIRUCHIRAPPALLI RIFLE CLUB">TIRUCHIRAPPALLI RIFLE CLUB</option>
+                <option value="VELLORE RIFLE CLUB">VELLORE RIFLE CLUB</option>
+              </select>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 11. District -->
+          <div class="form-group col-half">
+            <label for="district">District <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <select id="district" name="district" data-rules="required">
+                <option value="">-- SELECT DISTRICT --</option>
+                <option value="ARIYALUR">ARIYALUR</option>
+                <option value="CHENGALPATTU">CHENGALPATTU</option>
+                <option value="CHENNAI">CHENNAI</option>
+                <option value="COIMBATORE">COIMBATORE</option>
+                <option value="CUDDALORE">CUDDALORE</option>
+                <option value="DHARMAPURI">DHARMAPURI</option>
+                <option value="DINDIGUL">DINDIGUL</option>
+                <option value="ERODE">ERODE</option>
+                <option value="KALLAKURICHI">KALLAKURICHI</option>
+                <option value="KANCHEEPURAM">KANCHEEPURAM</option>
+                <option value="KANYAKUMARI">KANYAKUMARI</option>
+                <option value="KARUR">KARUR</option>
+                <option value="KRISHNAGIRI">KRISHNAGIRI</option>
+                <option value="MADURAI">MADURAI</option>
+                <option value="MAYILADUTHURAI">MAYILADUTHURAI</option>
+                <option value="NAGAPATTINAM">NAGAPATTINAM</option>
+                <option value="NAMAKKAL">NAMAKKAL</option>
+                <option value="NILGIRIS">NILGIRIS</option>
+                <option value="PERAMBALUR">PERAMBALUR</option>
+                <option value="PUDUKKOTTAI">PUDUKKOTTAI</option>
+                <option value="RAMANATHAPURAM">RAMANATHAPURAM</option>
+                <option value="RANIPET">RANIPET</option>
+                <option value="SALEM">SALEM</option>
+                <option value="SIVAGANGA">SIVAGANGA</option>
+                <option value="TENKASI">TENKASI</option>
+                <option value="THANJAVUR">THANJAVUR</option>
+                <option value="THENI">THENI</option>
+                <option value="THOOTHUKUDI">THOOTHUKUDI</option>
+                <option value="TIRUCHIRAPPALLI">TIRUCHIRAPPALLI</option>
+                <option value="TIRUNELVELI">TIRUNELVELI</option>
+                <option value="TIRUPATHUR">TIRUPATHUR</option>
+                <option value="TIRUPPUR">TIRUPPUR</option>
+                <option value="TIRUVALLUR">TIRUVALLUR</option>
+                <option value="TIRUVANNAMALAI">TIRUVANNAMALAI</option>
+                <option value="TIRUVARUR">TIRUVARUR</option>
+                <option value="VELLORE">VELLORE</option>
+                <option value="VILUPPURAM">VILUPPURAM</option>
+                <option value="VIRUDHUNAGAR">VIRUDHUNAGAR</option>
+              </select>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 12. Association -->
+          <div class="form-group col-full">
+            <label for="association">Association Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <input type="text" id="association" name="association" placeholder="District / State association" data-rules="required" maxlength="200">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 13. Membership ID -->
+          <div class="form-group col-half">
+            <label for="membership_id">Membership ID <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2" ry="2"/><path d="M3 11h18"/></svg>
+              <input type="text" id="membership_id" name="membership_id" placeholder="Membership ID" data-rules="required" maxlength="50">
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- 14. Membership Photo / PDF -->
+          <div class="form-group col-half">
+            <label for="membership_doc">Membership Photo / PDF <span class="req">*</span></label>
+            <div class="custom-file-upload-wrap" onclick="document.getElementById('membership_doc').click();" style="position:relative; width:100%; height:46px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); border-radius:8px; display:flex; align-items:center; padding:0 14px; cursor:pointer; transition:all 0.2s ease-in-out;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--gold-400); margin-right:10px; flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              <span id="membership_doc_label" style="font-size:13px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-grow:1; font-weight:500;">Upload File</span>
+              <input type="file" id="membership_doc" name="membership_doc" accept=".jpg,.jpeg,.png,.pdf" data-rules="required" style="display:none;" onchange="handleCustomFileUpload(this, 'membership_doc_label')">
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;padding-left:4px;">JPG, PNG or PDF – max 2MB</div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- ── SECTION: Account Security ─────────────────── -->
+          <div class="section-divider col-full">
+            <span>Account Security</span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group col-half">
+            <label for="password">Password <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="password" name="password" placeholder="Min 8 chars" data-rules="required|minLen:8" maxlength="100" autocomplete="new-password">
+              <button type="button" class="toggle-pw" aria-label="Toggle password visibility">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
+              </button>
+            </div>
+            <!-- Password strength meter -->
+            <div class="pw-strength" aria-live="polite">
+              <div class="bar"><div class="fill"></div></div>
+              <span class="label-text"></span>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group col-half">
+            <label for="confirm_password">Confirm Password <span class="req">*</span></label>
+            <div class="input-wrap">
+              <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" data-rules="required" maxlength="100" autocomplete="new-password">
+              <button type="button" class="toggle-pw" aria-label="Toggle confirm password visibility">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
+              </button>
+            </div>
+            <span class="field-error"></span>
+          </div>
+
+          <!-- Submit Row -->
+          <div class="col-full" style="margin-top:8px;">
+            <button type="submit" class="btn btn-primary" id="registerBtn">
+              <div class="spinner"></div>
+              <span class="btn-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Submit Registration
+              </span>
+            </button>
+          </div>
+
+          <!-- Back to Login -->
+          <div class="col-full link-row" style="justify-content:center;margin-top:0;">
+            <span>Already registered? <a href="login.html">Sign In here</a></span>
+          </div>
+
+        </div><!-- /.form-grid -->
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p style="font-weight:700; color:var(--gold-400, #c9a84c); margin-bottom:2px;">&copy; 2026 TARGET</p>
+    <p style="font-size:11px; opacity:0.85; margin:3px 0; line-height:1.4;">Tournament Administration and Registration Gateway for Event Tracking &nbsp;&middot;&nbsp; All Rights Reserved</p>
+    <p style="margin-top:3px; font-size:11.5px; opacity:0.85; line-height:1.4;">51st Tamil Nadu State Shooting Championship &nbsp;&middot;&nbsp; Official Portal</p>
+  </footer>
+
+</div><!-- /.page-wrapper -->
+
+<!-- Scripts -->
+<script>
+// Floating particles
+function initParticles() {
+  const bg = document.querySelector('.page-bg');
+  if (!bg) return;
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = [
+      `left:${Math.random() * 100}%`,
+      `animation-duration:${8 + Math.random() * 12}s`,
+      `animation-delay:${Math.random() * -15}s`,
+      `width:${1 + Math.random() * 2}px`,
+      `height:${1 + Math.random() * 2}px`,
+      `opacity:${0.2 + Math.random() * 0.4}`,
+    ].join(';');
+    bg.appendChild(p);
+  }
+}
+
+// Password toggle
+document.querySelectorAll('.toggle-pw').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = btn.closest('.input-wrap').querySelector('input');
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+  });
+});
+
+// Password strength
+const pwInput = document.getElementById('password');
+if (pwInput) {
+  pwInput.addEventListener('input', () => {
+    const meter = pwInput.closest('.form-group')?.querySelector('.pw-strength');
+    if (!meter) return;
+    const val = pwInput.value;
+    if (!val) { meter.classList.remove('show'); return; }
+    meter.classList.add('show');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const fill = meter.querySelector('.fill');
+    const lbl = meter.querySelector('.label-text');
+    const levels = [
+      { text: 'Weak', color: '#E74C3C', w: '25%' },
+      { text: 'Fair', color: '#E67E22', w: '50%' },
+      { text: 'Good', color: '#F1C40F', w: '75%' },
+      { text: 'Strong', color: '#27AE60', w: '100%' }
+    ];
+    const lvl = levels[Math.max(0, score - 1)] || levels[0];
+    fill.style.width = lvl.w;
+    fill.style.backgroundColor = lvl.color;
+    lbl.textContent = lvl.text;
+    lbl.style.color = lvl.color;
+  });
+}
+
+// Para/Deaf toggle
+function toggleSpecialLabel(type, isYes) {
+  const yesLbl = document.getElementById('lbl_' + type + '_yes');
+  const noLbl  = document.getElementById('lbl_' + type + '_no');
+  if (!yesLbl || !noLbl) return;
+  if (isYes) {
+    yesLbl.style.background = 'rgba(39,174,96,0.15)';
+    yesLbl.style.color      = '#5EDD8E';
+    noLbl.style.background  = 'rgba(255,255,255,0.03)';
+    noLbl.style.color       = 'var(--text-muted)';
+  } else {
+    noLbl.style.background  = 'rgba(255, 255, 255,0.12)';
+    noLbl.style.color       = 'var(--gold-400)';
+    yesLbl.style.background = 'rgba(255,255,255,0.03)';
+    yesLbl.style.color      = 'var(--text-muted)';
+  }
+
+  const paraYes = document.getElementById('is_para_yes').checked;
+  const deafYes = document.getElementById('is_deaf_yes').checked;
+  const proofGroup = document.getElementById('disability_proof_group');
+  const proofInput = document.getElementById('disability_proof');
+
+  if (paraYes || deafYes) {
+    proofGroup.style.display = 'block';
+    proofInput.setAttribute('data-rules', 'required');
+  } else {
+    proofGroup.style.display = 'none';
+    proofInput.removeAttribute('data-rules');
+    const lbl = document.getElementById('disability_proof_label');
+    if (lbl) {
+      lbl.textContent = 'Upload File';
+      lbl.style.color = 'var(--text-secondary)';
+    }
+    proofInput.value = '';
+  }
+}
+
+function handleCustomFileUpload(input, labelId) {
+  const lbl = document.getElementById(labelId);
+  if (!lbl) return;
+  if (input.files && input.files[0]) {
+    lbl.textContent = input.files[0].name;
+    lbl.style.color = 'var(--gold-400)';
+  } else {
+    lbl.textContent = 'Upload File';
+    lbl.style.color = 'var(--text-secondary)';
+  }
+}
+
+function handlePhotoUpload(input) {
+  const info = document.getElementById('photo_info');
+  const name = document.getElementById('photo_name');
+  if (input.files && input.files[0]) {
+    name.textContent = input.files[0].name;
+    info.style.display = 'flex';
+  } else {
+    info.style.display = 'none';
+  }
+}
+
+function clearUpload(id) {
+  const inp = document.getElementById(id);
+  if (inp) inp.value = '';
+  const info = document.getElementById(id + '_info');
+  if (info) info.style.display = 'none';
+}
+
+// Aadhaar auto-format
+const aInput = document.getElementById('aadhaar_number');
+if (aInput) {
+  aInput.addEventListener('input', function(e) {
+    let val = this.value.replace(/\D/g, '').substring(0, 12);
+    let parts = [];
+    for (let i = 0; i < val.length; i += 4) {
+      parts.push(val.substring(i, i + 4));
+    }
+    this.value = parts.join(' ');
+  });
+}
+
+// Auto uppercase
+['first_name', 'last_name', 'father_guardian_name', 'address', 'association', 'membership_id'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', () => { el.value = el.value.toUpperCase(); });
+  }
+});
+
+// Form submission validation
+function markField(input, valid, msg = '') {
+  const group = input.closest('.form-group');
+  const errEl = group?.querySelector('.field-error');
+  input.classList.toggle('is-invalid', !valid);
+  input.classList.toggle('is-valid', valid);
+  if (group) group.classList.toggle('has-error', !valid);
+  if (errEl) errEl.textContent = valid ? '' : msg;
+}
+
+const regForm = document.getElementById('registerForm');
+const msgBox = document.getElementById('msgBox');
+
+regForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+
+  const reqFields = [
+    { id: 'first_name', msg: 'First Name is required.' },
+    { id: 'dob', msg: 'Date of Birth is required.' },
+    { id: 'gender', msg: 'Please select gender.' },
+    { id: 'father_guardian_name', msg: 'Father / Guardian Name is required.' },
+    { id: 'email', msg: 'Valid email is required.' },
+    { id: 'phone', msg: '10-digit mobile number required.' },
+    { id: 'aadhaar_number', msg: '12-digit Aadhaar number required.' },
+    { id: 'address', msg: 'Full address is required.' },
+    { id: 'club_name', msg: 'Please select a club.' },
+    { id: 'district', msg: 'Please select a district.' },
+    { id: 'association', msg: 'Association name is required.' },
+    { id: 'membership_id', msg: 'Membership ID is required.' },
+    { id: 'password', msg: 'Password must be at least 8 characters.' },
+    { id: 'confirm_password', msg: 'Password confirmation required.' }
+  ];
+
+  reqFields.forEach(f => {
+    const el = document.getElementById(f.id);
+    if (!el || !el.value.trim()) {
+      markField(el, false, f.msg);
+      valid = false;
+    } else {
+      markField(el, true);
+    }
+  });
+
+  const pw = document.getElementById('password');
+  const cpw = document.getElementById('confirm_password');
+  if (pw && cpw && pw.value !== cpw.value) {
+    markField(cpw, false, 'Passwords do not match.');
+    valid = false;
+  }
+
+  if (!valid) {
+    msgBox.className = 'msg-box show error';
+    msgBox.innerHTML = '<span>✖</span><span>Please complete all required fields properly.</span>';
+    const firstErr = regForm.querySelector('.is-invalid');
+    firstErr?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true;
+  const spinner = btn.querySelector('.spinner');
+  const label = btn.querySelector('.btn-label');
+  if (spinner) spinner.classList.add('show');
+  if (label) label.style.display = 'none';
+
+  setTimeout(() => {
+    if (spinner) spinner.classList.remove('show');
+    if (label) label.style.display = '';
+    btn.disabled = false;
+    msgBox.className = 'msg-box show success';
+    msgBox.innerHTML = '<span>✔</span><span>Registration simulated successfully! You can now <a href="login.html" style="color:#5EDD8E;text-decoration:underline;">proceed to Login</a>.</span>';
+    msgBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 1200);
+});
+
+document.addEventListener('DOMContentLoaded', initParticles);
+</script>
+</body>
+</html>

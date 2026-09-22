@@ -1,0 +1,13 @@
+﻿<?php
+/**
+ * Local Database Configuration Override Template
+ * Copy this file to config/db.local.php and configure for your local system.
+ * db.local.php is ignored by Git, so your local settings will not be committed or overwritten.
+ */
+
+define('DB_HOST',    '127.0.0.1');
+define('DB_PORT',    '3306');          // Change to your MySQL port (e.g., 3306 or 3307)
+define('DB_USER',    'root');          // Change to your MySQL username
+define('DB_PASS',    '');              // Change to your MySQL password
+define('DB_NAME',    'ssachampionship');
+define('DB_CHARSET', 'utf8mb4');

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Open Academy Dashboard</title>
+    <!-- Automatic redirect to the PHP localhost server page -->
+    <meta http-equiv="refresh" content="0; url=http://localhost/SSA/ssa-dashboard/index.php" />
+    <style>
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: #0d0f14;
+            color: #c9a84c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            background: rgba(20, 24, 36, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 450px;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 0;
+            letter-spacing: 0.5px;
+        }
+        p {
+            color: #a8a49c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        a {
+            color: #c9a84c;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Opening Academy Dashboard...</h2>
+        <p>Launching the local web server dashboard. If you are not redirected in a few seconds, please click the link below:</p>
+        <p><a href="http://localhost/SSA/ssa-dashboard/index.php">Go to Dashboard &rarr;</a></p>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.08); margin: 20px 0;">
+        <p style="font-size: 12px; color: #7f8c8d; margin-bottom: 0;"><strong>Requirement:</strong> Please make sure your XAMPP Control Panel (Apache module) is running.</p>
+    </div>
+    <script>
+        // Javascript redirection as a backup
+        window.location.href = "http://localhost/SSA/ssa-dashboard/index.php";
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Ignore participant uploads (keeps template background assets and logos trackable by Git)
+uploads/profile_photos/
+uploads/membership_docs/
+uploads/disability_proofs/
+uploads/payments/
+uploads/certificates/
+uploads/competitor_cards/
+uploads/user_*/
+
+# Temporary and log files
+*.log
+tmp_output.txt
+
+# XAMPP / Local server settings
+.idea/
+.vscode/
+.DS_Store
+# Local Database Configuration
+config/db.local.php
+
+# Local Mail Configuration
+config/mail.local.php
+
+# Local Configuration Overrides
+config/*.local.php
+config/.db_initialized

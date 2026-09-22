@@ -1,0 +1,16 @@
+# Prevent execution of any scripts in the uploads directory
+<FilesMatch "\.(php|php3|php4|php5|phps|phtml|exe|pl|cgi|asp|aspx|sh|bash|py)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Disable PHP execution engine if supported
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Force download or safe inline display of images/PDFs only
+Options -Indexes -ExecCGI

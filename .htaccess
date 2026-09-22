@@ -1,0 +1,23 @@
+# Security Hardening .htaccess for SSA Championship Application
+
+# 1. Disable Directory Browsing
+Options -Indexes
+
+# 2. Block access to sensitive log, config, and internal files
+<FilesMatch "\.(log|ini|json|sql|sh|bak|config|env|db_initialized)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(db\.local\.php|\.htaccess|\.git)">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# 3. Add Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

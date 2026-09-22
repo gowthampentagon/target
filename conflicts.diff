@@ -1,0 +1,1211 @@
+﻿diff --cc actions/event_register_action.php
+index 27e15c7,d83c3e2..0000000
+--- a/actions/event_register_action.php
++++ b/actions/event_register_action.php
+@@@ -41,150 -32,15 +41,162 @@@ if (count($cart) > 10) 
+  }
+  
+  // ΓöÇΓöÇ Validate each cart item ΓöÇΓöÇ
+++<<<<<<< HEAD
+ +// NOTE: Special athletes (para/deaf) now use ISSF or NR categories directly; PARA_DEAF removed from UI
+ +$validCats    = ['ISSF','NR','NR_MQS'];
+ +$validAges    = ['Sub Youth','Youth','Junior','Senior','Master','Senior Master','Super Master'];
+ +$currentYear  = (int)date('Y');
+ +
+ +// ΓöÇΓöÇ Lookup user's details ΓöÇΓöÇ
+ +$userStmt = getDB()->prepare("SELECT is_para, is_deaf, dob, gender FROM registrations WHERE id = ? LIMIT 1");
+ +$userStmt->execute([$userId]);
+ +$regUser = $userStmt->fetch();
+ +$isPara = (int)($regUser['is_para'] ?? 0);
+ +$isDeaf = (int)($regUser['is_deaf'] ?? 0);
+ +$isParaDeaf = ($isPara || $isDeaf) ? 1 : 0;
+ +$dob = $regUser['dob'] ?? null;
+ +
+ +function getBackendUserAgeGroup(int $age): string {
+ +    if ($age < 16) return 'sub_youth';
+ +    if ($age < 18) return 'youth';
+ +    if ($age < 21) return 'junior';
+ +    if ($age <= 44) return 'senior';
+ +    if ($age <= 59) return 'master';
+ +    if ($age <= 69) return 'senior_master';
+ +    return 'super_master';
+ +}
+ +
+ +function getBackendEventAgeGroup(string $name): string {
+ +    $u = strtoupper($name);
+ +    if (strpos($u, 'SUB YOUTH') !== false) return 'sub_youth';
+ +    if (strpos($u, 'YOUTH') !== false) return 'youth';
+ +    if (strpos($u, 'JUNIOR') !== false) return 'junior';
+ +    if (strpos($u, 'SUPER MASTER') !== false) return 'super_master';
+ +    if (strpos($u, 'SENIOR MASTER') !== false) return 'senior_master';
+ +    if (strpos($u, 'MASTER') !== false) return 'master';
+ +    return 'senior';
+ +}
+ +
+ +function isBackendEligibleAgeGroup(string $userGroup, string $eventGroup): bool {
+ +    if ($userGroup === $eventGroup) return true;
+ +
+ +    if ($userGroup === 'sub_youth') {
+ +        return in_array($eventGroup, ['youth', 'junior', 'senior'], true);
+ +    }
+ +    if ($userGroup === 'youth') {
+ +        return in_array($eventGroup, ['junior', 'senior'], true);
+ +    }
+ +    if ($userGroup === 'junior') {
+ +        return $eventGroup === 'senior';
+ +    }
+ +    if ($userGroup === 'master') {
+ +        return $eventGroup === 'senior';
+ +    }
+ +    if ($userGroup === 'senior_master') {
+ +        return in_array($eventGroup, ['master', 'senior'], true);
+ +    }
+ +    if ($userGroup === 'super_master') {
+ +        return in_array($eventGroup, ['senior_master', 'master', 'senior'], true);
+ +    }
+ +    return false;
+ +}
+ +
+ +function getBackendEventBaseType(string $label): string {
+ +    $u = strtoupper($label);
+ +    if (strpos($u, '10M AIR RIFLE STANDING SH1') !== false) return '10m_air_rifle_standing_sh1';
+ +    if (strpos($u, '10M AIR RIFLE PRONE SH1') !== false) return '10m_air_rifle_prone_sh1';
+ +    if (strpos($u, '50M RIFLE PRONE SH1') !== false) return '50m_rifle_prone_sh1';
+ +    if (strpos($u, '50M RIFLE 3 POSITIONS SH1') !== false || strpos($u, '50M RIFLE 3 POSITION SH1') !== false) return '50m_rifle_3_positions_sh1';
+ +    if (strpos($u, '10M AIR RIFLE STANDING SH2') !== false) return '10m_air_rifle_standing_sh2';
+ +    if (strpos($u, '10M AIR RIFLE PRONE SH2') !== false) return '10m_air_rifle_prone_sh2';
+ +    if (strpos($u, '50M RIFLE PRONE SH2') !== false) return '50m_rifle_prone_sh2';
+ +    if (strpos($u, '10M AIR PISTOL SH1') !== false) return '10m_air_pistol_sh1';
+ +    if (strpos($u, '25M PISTOL SH1') !== false) return '25m_pistol_sh1';
+ +    if (strpos($u, '50M PISTOL SH1') !== false) return '50m_pistol_sh1';
+ +    if (strpos($u, '10M STANDARD AIR PISTOL SH1') !== false) return '10m_standard_air_pistol_sh1';
+ +
+ +    if (strpos($u, '10M OPEN SIGHT AIR RIFLE') !== false) return '10m_open_sight_air_rifle';
+ +    if (strpos($u, '10M AIR RIFLE') !== false || strpos($u, '10M RIFLE') !== false) return '10m_air_rifle';
+ +    if (strpos($u, '50M OPEN SIGHT RIFLE PRONE') !== false) return '50m_open_sight_rifle_prone';
+ +    if (strpos($u, '50M RIFLE PRONE') !== false) return '50m_rifle_prone';
+ +    if (strpos($u, '50M OPEN SIGHT RIFLE 3 POSITIONS') !== false || strpos($u, '50M OPEN SIGHT RIFLE 3 POSITION') !== false) return '50m_open_sight_rifle_3_positions';
+ +    if (strpos($u, '50M RIFLE 3 POSITIONS') !== false || strpos($u, '50M RIFLE 3 POSITION') !== false) return '50m_rifle_3_positions';
+ +    
+ +    if (strpos($u, '10M AIR PISTOL') !== false || strpos($u, '10M PISTOL') !== false) return '10m_air_pistol';
+ +    if (strpos($u, '25M SPORT PISTOL') !== false || strpos($u, '25M PISTOL') !== false) return '25m_sport_pistol';
+ +    if (strpos($u, '25M CENTRE FIRE PISTOL') !== false || strpos($u, '25M CENTER FIRE PISTOL') !== false || strpos($u, '25M CENTRE') !== false || strpos($u, '25M CENTER') !== false) return '25m_centre_fire_pistol';
+ +    if (strpos($u, '25M STANDARD PISTOL') !== false || strpos($u, '25M STANDARD') !== false) return '25m_standard_pistol';
+ +    if (strpos($u, '50M FREE PISTOL') !== false || strpos($u, '50M PISTOL') !== false || strpos($u, '50M FREE') !== false) return '50m_free_pistol';
+ +
+ +    return '';
+ +}
+ +
+ +function getBackendAllowedAgeGroupsForEvent(string $baseType, string $gender): array {
+ +    $g = strtoupper($gender);
+ +    
+ +    if ($baseType === '10m_air_rifle' || $baseType === '10m_open_sight_air_rifle' || $baseType === '10m_air_pistol') {
+ +        return ['sub_youth', 'youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +    }
+ +    if ($baseType === '50m_rifle_prone' || $baseType === '50m_rifle_3_positions') {
+ +        return ['youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +    }
+ +    if ($baseType === '50m_open_sight_rifle_prone' || $baseType === '50m_open_sight_rifle_3_positions') {
+ +        return ['junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +    }
+ +    if ($baseType === '25m_sport_pistol') {
+ +        if (strpos($g, 'WOMEN') !== false || strpos($g, 'FEMALE') !== false) {
+ +            return ['youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +        } else {
+ +            return ['youth', 'junior', 'senior'];
+ +        }
+ +    }
+ +    if ($baseType === '25m_centre_fire_pistol') {
+ +        return ['senior', 'master', 'senior_master', 'super_master'];
+ +    }
+ +    if ($baseType === '25m_standard_pistol') {
+ +        if (strpos($g, 'WOMEN') !== false || strpos($g, 'FEMALE') !== false) {
+ +            return ['junior', 'senior'];
+ +        } else {
+ +            return ['junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +        }
+ +    }
+ +    if ($baseType === '50m_free_pistol') {
+ +        return ['junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +    }
+ +    
+ +    // Para/Deaf SH1 / SH2 events
+ +    if ($baseType === '10m_air_rifle_standing_sh1' || $baseType === '10m_air_pistol_sh1') {
+ +        return ['youth', 'junior', 'senior'];
+ +    }
+ +    if ($baseType === '10m_air_rifle_prone_sh1' || $baseType === '50m_rifle_prone_sh1' || $baseType === '50m_rifle_3_positions_sh1' ||
+ +        $baseType === '10m_air_rifle_standing_sh2' || $baseType === '10m_air_rifle_prone_sh2' || $baseType === '50m_rifle_prone_sh2' ||
+ +        $baseType === '25m_pistol_sh1' || $baseType === '50m_pistol_sh1' || $baseType === '10m_standard_air_pistol_sh1') {
+ +        return ['junior', 'senior'];
+ +    }
+ +
+ +    return ['sub_youth', 'youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +}
+ +
+ +function isBackendEventAllowedForUser(string $eventLabel, string $eventGender, string $userAgeGroup): bool {
+ +    $eventAgeGroup = getBackendEventAgeGroup($eventLabel);
+ +    if (!isBackendEligibleAgeGroup($userAgeGroup, $eventAgeGroup)) {
+ +        return false;
+ +    }
+ +    $baseType = getBackendEventBaseType($eventLabel);
+ +    $allowedGroups = getBackendAllowedAgeGroupsForEvent($baseType, $eventGender ?: 'Male');
+ +    return in_array($eventAgeGroup, $allowedGroups, true);
+ +}
+++=======
++ $validCats    = ['ISSF','NR','PARA_DEAF','NR_MQS'];
++ $validAges    = ['Sub Youth','Youth','Junior','Senior','Master','Senior Master','Super Master'];
++ $currentYear  = (int)date('Y');
++ 
++ // ΓöÇΓöÇ Lookup user's para/deaf status ΓöÇΓöÇ
++ $userStmt = getDB()->prepare("SELECT is_para_deaf FROM registrations WHERE id = ? LIMIT 1");
++ $userStmt->execute([$userId]);
++ $regUser = $userStmt->fetch();
++ $isParaDeaf = (int)($regUser['is_para_deaf'] ?? 0);
+++>>>>>>> 3c421ce (done till lane allocation)
+  
+  foreach ($cart as $idx => $item) {
+      $finalCat = strtoupper(trim($item['final_cat'] ?? ''));
+@@@ -198,49 -54,12 +210,58 @@@
+          exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": invalid score."]));
+      if (($finalCat === 'ISSF' || $finalCat === 'NR_MQS') && empty($item['issf_number']))
+          exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": ISSF number required."]));
+++<<<<<<< HEAD
+ +    // Block NR_MQS for para/deaf athletes
+ +    if ($isParaDeaf && $finalCat === 'NR_MQS')
+ +        exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": NR for MQS category is not applicable for Para/Deaf athletes."]));
+ +    // Para/deaf users must provide disability & classification
+ +    if ($isParaDeaf && (empty($item['disability_type']) || empty($item['classification'])))
+ +        exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Disability type and sports classification required for Para/Deaf athletes."]));
+ +
+ +    // Validation of Para / Deaf event types
+ +    $isDeafEvent = (strpos($item['event_name'], 'DS') === 0);
+ +    $isParaEvent = (strpos($item['event_name'], 'R') === 0);
+ +    $isSpecialEvent = $isDeafEvent || $isParaEvent;
+ +
+ +    if (!$isParaDeaf) {
+ +        if ($isSpecialEvent) {
+ +            exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Special category events (Para/Deaf) are only for Para/Deaf athletes."]));
+ +        }
+ +    } else {
+ +        if (!$isSpecialEvent) {
+ +            exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Registered Para/Deaf athletes can only register for special category (Para/Deaf) events."]));
+ +        }
+ +        if ($isDeafEvent && !$isDeaf) {
+ +            exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Deaf events are only for Deaf athletes."]));
+ +        }
+ +        if ($isParaEvent && !$isPara) {
+ +            exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Para events are only for Para athletes."]));
+ +        }
+ +    }
+ +
+ +    // NRAI Rule 11 Age Group Eligibility Verification (2026)
+ +    if ($dob) {
+ +        $userAge = 2026 - (int)date('Y', strtotime($dob));
+ +        if ($userAge < 12) {
+ +            exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Athletes below 12 years of age are not permitted to participate."]));
+ +        }
+ +        $userGroup = getBackendUserAgeGroup($userAge);
+ +        $userGender = $regUser['gender'] ?? 'Male';
+ +        if (!isBackendEventAllowedForUser($item['event_name'], $userGender, $userGroup)) {
+ +            exit(json_encode([
+ +                'success' => false,
+ +                'message' => "Cart item " . ($idx+1) . ": You are not eligible to participate in '{$item['event_name']}' based on your age category and the event regulations."
+ +            ]));
+ +        }
+ +    }
+++=======
++     // Block non-para users from PARA_DEAF category
++     if (!$isParaDeaf && $finalCat === 'PARA_DEAF')
++         exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Para/Deaf category is only for Para/Deaf athletes."]));
++     // Para/deaf users must provide disability & classification for all categories
++     if ($isParaDeaf && (empty($item['disability_type']) || empty($item['classification'])))
++         exit(json_encode(['success'=>false,'message'=>"Cart item ".($idx+1).": Disability type and sports classification required for Para/Deaf athletes."]));
+++>>>>>>> 3c421ce (done till lane allocation)
+  }
+  
+  // ΓöÇΓöÇ Payment Screenshot ΓöÇΓöÇ
+diff --cc actions/register_action.php
+index 1f87f64,6ce2a7c..0000000
+--- a/actions/register_action.php
++++ b/actions/register_action.php
+@@@ -42,12 -41,10 +42,19 @@@ $district            = clean($_POST['di
+  $association         = clean($_POST['association']         ?? '');
+  $father_guardian     = clean($_POST['father_guardian_name'] ?? '');
+  $address             = clean($_POST['address']             ?? '');
+++<<<<<<< HEAD
+ +$is_para             = (int)($_POST['is_para']             ?? 0);
+ +$is_deaf             = (int)($_POST['is_deaf']             ?? 0);
+ +$password            = $_POST['password']                  ?? '';
+ +$confirm_password    = $_POST['confirm_password']          ?? '';
+ +$photoPath           = null;
+ +$membershipDocPath   = null;
+++=======
++ $is_para_deaf        = (int)($_POST['is_para_deaf']        ?? 0);
++ $password            = $_POST['password']                  ?? '';
++ $confirm_password    = $_POST['confirm_password']          ?? '';
++ $photoPath           = null;
+++>>>>>>> 3c421ce (done till lane allocation)
+  
+  // ΓöÇΓöÇ Handle Photo Upload ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+@@@ -69,7 -66,7 +76,11 @@@
+          mkdir($uploadDir, 0755, true);
+      }
+  
+++<<<<<<< HEAD
+ +    $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+++=======
++     $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+++>>>>>>> 3c421ce (done till lane allocation)
+      $filename = 'profile_' . bin2hex(random_bytes(8)) . '.' . $ext;
+      $dest = $uploadDir . $filename;
+  
+@@@ -79,69 -76,6 +90,72 @@@
+  
+      $photoPath = 'uploads/profile_photos/' . $filename;
+  }
+++<<<<<<< HEAD
+ +
+ +// ΓöÇΓöÇ Handle Membership Document Upload ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ +if (isset($_FILES['membership_doc']) && $_FILES['membership_doc']['error'] === UPLOAD_ERR_OK) {
+ +    $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+ +    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+ +    $mime = finfo_file($finfo, $_FILES['membership_doc']['tmp_name']);
+ +    finfo_close($finfo);
+ +
+ +    if (!in_array($mime, $allowedTypes, true)) {
+ +        exit(json_encode(['success' => false, 'message' => 'Membership document must be JPG, PNG, or PDF.']));
+ +    }
+ +
+ +    if ($_FILES['membership_doc']['size'] > 2 * 1024 * 1024) {
+ +        exit(json_encode(['success' => false, 'message' => 'Membership document must be under 2MB.']));
+ +    }
+ +
+ +    $uploadDir = dirname(__DIR__) . '/uploads/membership_docs/';
+ +    if (!is_dir($uploadDir)) {
+ +        mkdir($uploadDir, 0755, true);
+ +    }
+ +
+ +    $ext = strtolower(pathinfo($_FILES['membership_doc']['name'], PATHINFO_EXTENSION));
+ +    $filename = 'membership_' . bin2hex(random_bytes(8)) . '.' . $ext;
+ +    $dest = $uploadDir . $filename;
+ +
+ +    if (!move_uploaded_file($_FILES['membership_doc']['tmp_name'], $dest)) {
+ +        exit(json_encode(['success' => false, 'message' => 'Failed to upload membership document.']));
+ +    }
+ +
+ +    $membershipDocPath = 'uploads/membership_docs/' . $filename;
+ +}
+ +
+ +// ΓöÇΓöÇ Handle Disability Proof Upload ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ +$disabilityProofPath = null;
+ +if (($is_para === 1 || $is_deaf === 1) && isset($_FILES['disability_proof']) && $_FILES['disability_proof']['error'] === UPLOAD_ERR_OK) {
+ +    $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+ +    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+ +    $mime = finfo_file($finfo, $_FILES['disability_proof']['tmp_name']);
+ +    finfo_close($finfo);
+ +
+ +    if (!in_array($mime, $allowedTypes, true)) {
+ +        exit(json_encode(['success' => false, 'message' => 'Disability proof document must be JPG, PNG, or PDF.']));
+ +    }
+ +
+ +    if ($_FILES['disability_proof']['size'] > 2 * 1024 * 1024) {
+ +        exit(json_encode(['success' => false, 'message' => 'Disability proof document must be under 2MB.']));
+ +    }
+ +
+ +    $uploadDir = dirname(__DIR__) . '/uploads/disability_proofs/';
+ +    if (!is_dir($uploadDir)) {
+ +        mkdir($uploadDir, 0755, true);
+ +    }
+ +
+ +    $ext = strtolower(pathinfo($_FILES['disability_proof']['name'], PATHINFO_EXTENSION));
+ +    $filename = 'disability_' . bin2hex(random_bytes(8)) . '.' . $ext;
+ +    $dest = $uploadDir . $filename;
+ +
+ +    if (!move_uploaded_file($_FILES['disability_proof']['tmp_name'], $dest)) {
+ +        exit(json_encode(['success' => false, 'message' => 'Failed to upload disability proof document.']));
+ +    }
+ +
+ +    $disabilityProofPath = 'uploads/disability_proofs/' . $filename;
+ +}
+++=======
+++>>>>>>> 3c421ce (done till lane allocation)
+  
+  // ΓöÇΓöÇ Server-side validation ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  $errors = [];
+@@@ -245,13 -162,13 +259,23 @@@ try 
+      // Insert (reg_id generated later when user registers for a categorized event)
+      $insert = $pdo->prepare("
+          INSERT INTO registrations
+++<<<<<<< HEAD
+ +            (first_name, last_name, email, phone, aadhaar_number, is_para, is_deaf,
+ +             club_name, membership_id, dob, gender, district, association,
+ +             father_guardian_name, address, photo, membership_doc, disability_proof, password_hash)
+ +        VALUES
+ +            (:fn, :ln, :em, :ph, :ad, :is_para, :is_deaf,
+ +             :cl, :mid, :dob, :ge, :di, :as_name,
+ +              :fg, :addr, :photo, :mdoc, :dproof, :pw)
+++=======
++             (first_name, last_name, email, phone, aadhaar_number, is_para_deaf,
++              club_name, dob, gender, district, association,
++              father_guardian_name, address, photo, password_hash)
++         VALUES
++             (:fn, :ln, :em, :ph, :ad, :pd,
++              :cl, :dob, :ge, :di, :as_name,
++              :fg, :addr, :photo, :pw)
+++>>>>>>> 3c421ce (done till lane allocation)
+      ");
+      $insert->execute([
+          ':fn'       => $first_name,
+@@@ -259,10 -176,8 +283,14 @@@
+          ':em'       => $email,
+          ':ph'       => $phone,
+          ':ad'       => $aadhaar,
+++<<<<<<< HEAD
+ +        ':is_para'  => $is_para,
+ +        ':is_deaf'  => $is_deaf,
+++=======
++         ':pd'       => $is_para_deaf,
+++>>>>>>> 3c421ce (done till lane allocation)
+          ':cl'       => $club_name,
+ +        ':mid'      => $membership_id,
+          ':dob'      => $dob,
+          ':ge'       => $gender,
+          ':di'       => $district,
+@@@ -270,8 -185,6 +298,11 @@@
+          ':fg'       => $father_guardian,
+          ':addr'     => $address,
+          ':photo'    => $photoPath,
+++<<<<<<< HEAD
+ +        ':mdoc'     => $membershipDocPath,
+ +        ':dproof'   => $disabilityProofPath,
+++=======
+++>>>>>>> 3c421ce (done till lane allocation)
+          ':pw'       => $hash,
+      ]);
+  
+diff --cc actions/save_draft_action.php
+index 3e29f72,c738fdb..0000000
+--- a/actions/save_draft_action.php
++++ b/actions/save_draft_action.php
+@@@ -136,39 -136,15 +136,51 @@@ try 
+      };
+  
+      // Validate Para/Deaf category access & requirements
+++<<<<<<< HEAD
+ +    $uStmt = $pdo->prepare("SELECT is_para, is_deaf FROM registrations WHERE id = ? LIMIT 1");
+ +    $uStmt->execute([$userId]);
+ +    $regU = $uStmt->fetch();
+ +    $isPara = (int)($regU['is_para'] ?? 0);
+ +    $isDeaf = (int)($regU['is_deaf'] ?? 0);
+ +    $isPd = ($isPara || $isDeaf) ? 1 : 0;
+ +    foreach ($cart as $idx => $item) {
+ +        $fc = strtoupper(trim($item['final_cat'] ?? ''));
+ +        if (!$isPd && $fc === 'PARA_DEAF') exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Para/Deaf category is only for Para/Deaf athletes."]));
+ +        if ($isPd && $fc === 'NR_MQS') exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": NR for MQS category is not applicable for Para/Deaf athletes."]));
+ +        if ($isPd && (empty($item['disability_type']) || empty($item['classification'])))
+ +            exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Disability type and sports classification required for Para/Deaf athletes."]));
+ +
+ +        // Validation of Para / Deaf event types
+ +        $isDeafEvent = (strpos($item['event_name'], 'DS') === 0);
+ +        $isParaEvent = (strpos($item['event_name'], 'R') === 0);
+ +        $isSpecialEvent = $isDeafEvent || $isParaEvent;
+ +
+ +        if (!$isPd) {
+ +            if ($isSpecialEvent) {
+ +                exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Special category events (Para/Deaf) are only for Para/Deaf athletes."]));
+ +            }
+ +        } else {
+ +            if (!$isSpecialEvent) {
+ +                exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Registered Para/Deaf athletes can only register for special category (Para/Deaf) events."]));
+ +            }
+ +            if ($isDeafEvent && !$isDeaf) {
+ +                exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Deaf events are only for Deaf athletes."]));
+ +            }
+ +            if ($isParaEvent && !$isPara) {
+ +                exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Para events are only for Para athletes."]));
+ +            }
+ +        }
+++=======
++     $uStmt = $pdo->prepare("SELECT is_para_deaf FROM registrations WHERE id = ? LIMIT 1");
++     $uStmt->execute([$userId]);
++     $regU = $uStmt->fetch();
++     $isPd = (int)($regU['is_para_deaf'] ?? 0);
++     foreach ($cart as $idx => $item) {
++         $fc = strtoupper(trim($item['final_cat'] ?? ''));
++         if (!$isPd && $fc === 'PARA_DEAF') exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Para/Deaf category is only for Para/Deaf athletes."]));
++         if ($isPd && (empty($item['disability_type']) || empty($item['classification'])))
++             exit(json_encode(['success'=>false,'message'=>"Item ".($idx+1).": Disability type and sports classification required for Para/Deaf athletes."]));
+++>>>>>>> 3c421ce (done till lane allocation)
+      }
+  
+      // Insert new draft event registrations
+diff --cc admin/lane_allocations.php
+index 510e132,bd870d3..0000000
+--- a/admin/lane_allocations.php
++++ b/admin/lane_allocations.php
+@@@ -1307,7 -1307,7 +1307,11 @@@ async function saveSchedule() 
+        showMsg(box, 'success', data.message);
+        scheduleDirty = false;
+        closeModal('scheduleModal');
+++<<<<<<< HEAD
+ +      window.location.reload();
+++=======
++       setTimeout(() => window.location.reload(), 800);
+++>>>>>>> 3c421ce (done till lane allocation)
+      } else {
+        showMsg(box, 'error', data.message);
+      }
+@@@ -1354,7 -1354,7 +1358,11 @@@ async function saveAsTemplate() 
+        showMsg(box, 'success', data.message);
+        scheduleDirty = false;
+        closeModal('scheduleModal');
+++<<<<<<< HEAD
+ +      window.location.reload();
+++=======
++       setTimeout(() => window.location.reload(), 800);
+++>>>>>>> 3c421ce (done till lane allocation)
+      } else {
+        showMsg(box, 'error', data.message);
+      }
+@@@ -1388,7 -1388,7 +1396,11 @@@ async function applyTemplate() 
+      if (data.success) {
+        showMsg(box, 'success', data.message);
+        closeModal('scheduleModal');
+++<<<<<<< HEAD
+ +      window.location.reload();
+++=======
++       setTimeout(() => window.location.reload(), 800);
+++>>>>>>> 3c421ce (done till lane allocation)
+      } else {
+        showMsg(box, 'error', data.message);
+      }
+@@@ -1448,7 -1448,7 +1460,11 @@@ async function clearSchedule() 
+      if (data.success) {
+        showMsg(box, 'success', data.message);
+        closeModal('scheduleModal');
+++<<<<<<< HEAD
+ +      window.location.reload();
+++=======
++       setTimeout(() => window.location.reload(), 800);
+++>>>>>>> 3c421ce (done till lane allocation)
+      } else {
+        showMsg(box, 'error', data.message);
+      }
+diff --cc admin/start_sheet.php
+index 5d1787f,055dda9..0000000
+--- a/admin/start_sheet.php
++++ b/admin/start_sheet.php
+@@@ -494,7 -494,7 +494,11 @@@ document.getElementById('allocateForm')
+      if (data.success) {
+        showMsg(box, 'success', data.message);
+        closeModal('allocateModal');
+++<<<<<<< HEAD
+ +      window.location.reload();
+++=======
++       setTimeout(() => window.location.reload(), 1200);
+++>>>>>>> 3c421ce (done till lane allocation)
+      } else {
+        showMsg(box, 'error', data.message);
+      }
+@@@ -515,7 -515,7 +519,11 @@@ async function deleteAllocation(eventRe
+      const box = document.getElementById('msgBox');
+      if (data.success) {
+        showMsg(box, 'success', data.message);
+++<<<<<<< HEAD
+ +      window.location.reload();
+++=======
++       setTimeout(() => window.location.reload(), 1200);
+++>>>>>>> 3c421ce (done till lane allocation)
+      } else {
+        showMsg(box, 'error', data.message);
+      }
+diff --cc event_register.php
+index 1d00d97,4e07d3e..0000000
+--- a/event_register.php
++++ b/event_register.php
+@@@ -1,28 -1,80 +1,86 @@@
+  <?php
+ -/**
+ - * event_register.php
+ - * 51st Tamil Nadu State Shooting Championship
+ - * Multi-event Registration Form with Cart + Payment Upload
+ - */
+ +if (session_status() === PHP_SESSION_NONE) {
+ +    session_start();
+ +}
+ +
+  require_once 'config/db.php';
+ -if (session_status() === PHP_SESSION_NONE) session_start();
+  
+ -if (empty($_SESSION['user_id'])) { header('Location: index.php?expired=1'); exit; }
+ -if (!empty($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > SESSION_TIMEOUT) {
+ -    session_destroy(); header('Location: index.php?expired=1'); exit;
+ +if (empty($_SESSION['user_id'])) {
+ +    header('Location: index.php?expired=1');
+ +    exit;
+  }
+ -$_SESSION['login_time'] = time();
+  
+  try {
+ -    $pdo  = getDB();
+ -    $stmt = $pdo->prepare("SELECT * FROM registrations WHERE id = ? LIMIT 1");
+ +    $pdo = getDB();
+ +    $stmt = $pdo->prepare('SELECT * FROM registrations WHERE id = ? LIMIT 1');
+      $stmt->execute([$_SESSION['user_id']]);
+      $user = $stmt->fetch();
+ -    if (!$user) { session_destroy(); header('Location: index.php'); exit; }
+ +} catch (Exception $e) {
+ +    $user = false;
+ +}
+  
+++<<<<<<< HEAD
+ +if (!$user) {
+ +    header('Location: index.php?expired=1');
+ +    exit;
+ +}
+++=======
++     // Past registration sessions (excluding drafts)
++     $sesStmt = $pdo->prepare(
++         "SELECT s.session_id, s.total_amount, s.payment_status, s.approval_status, s.created_at,
++                 COUNT(e.id) as evt_count
++          FROM registration_sessions s
++          LEFT JOIN event_registrations e ON e.session_id = s.id
++          WHERE s.user_id = ? AND s.approval_status != 'draft'
++          GROUP BY s.id
++          ORDER BY s.created_at DESC"
++     );
++     $sesStmt->execute([$_SESSION['user_id']]);
++     $pastSessions = $sesStmt->fetchAll();
++ 
++     // Fetch latest active draft session
++     $draftStmt = $pdo->prepare(
++         "SELECT id, session_id, created_at FROM registration_sessions
++          WHERE user_id = ? AND approval_status = 'draft'
++          ORDER BY updated_at DESC LIMIT 1"
++     );
++     $draftStmt->execute([$_SESSION['user_id']]);
++     $activeDraft = $draftStmt->fetch();
++ 
++     $draftEventsJson = '[]';
++     $draftIssfNum = '';
++     $draftDisType = '';
++     $draftClassif = '';
++     if ($activeDraft) {
++         $deStmt = $pdo->prepare("SELECT * FROM event_registrations WHERE session_id = ? ORDER BY id");
++         $deStmt->execute([$activeDraft['id']]);
++         $draftEvents = $deStmt->fetchAll();
++         $draftEventsJson = json_encode($draftEvents);
++         if (!empty($draftEvents)) {
++             $draftIssfNum = $draftEvents[0]['issf_number'] ?? '';
++             $draftDisType = $draftEvents[0]['disability_type'] ?? '';
++             $draftClassif = $draftEvents[0]['classification'] ?? '';
++         }
++     }
++ 
++ } catch (Exception $e) { $user = null; $pastSessions = []; $activeDraft = null; $draftEventsJson = '[]'; }
++ 
++ if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
++ 
++ $age = (new DateTime())->diff(new DateTime($user['dob']))->y;
++ $autoAgeGroup = match(true) {
++     $age < 16                     => 'Sub Youth',
++     $age < 18                     => 'Youth',
++     $age < 21                     => 'Junior',
++     $age >= 21 && $age <= 44      => 'Senior',
++     $age >= 45 && $age <= 59      => 'Master',
++     $age >= 60 && $age <= 69      => 'Senior Master',
++     default                       => 'Super Master',
++ };
++ $userGender   = $user['gender'] ?? 'Male';
++ $currentYear = 2025;
++ $prevYear    = 2024;
+++>>>>>>> 3c421ce (done till lane allocation)
+  
+  $pageTitle = 'Event Registration ΓÇô 51st TNSC';
+  require_once 'includes/header.php';
+@@@ -370,26 -307,79 +428,75 @@@ $autoAgeGroup = getPhpAgeGroup($age)
+    <!-- ΓòÉΓòÉ FORM ΓòÉΓòÉ -->
+    <div style="background:var(--grad-panel);border:var(--border-gold);border-radius:var(--radius-lg);padding:34px 38px;box-shadow:var(--shadow-card);">
+    <form id="masterForm" enctype="multipart/form-data" novalidate>
+ -    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+ +    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+      <input type="hidden" id="cartJson" name="cart_json" value="[]">
+      <input type="hidden" id="draftSessionId" name="draft_session_id" value="">
+ -
+ -    <!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ -         PANEL 1 ΓÇô Personal Details (Read-only)
+ -    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+ -    <div class="panel-section">
+ -      <div class="panel-section-title">1. Personal Details</div>
+ -      <p style="color:var(--text-secondary);font-size:12px;margin-top:-14px;margin-bottom:20px;">Pre-filled from your registered profile.</p>
+ -      <div class="form-row-2" style="margin-bottom:16px;">
+ -        <div class="form-group"><label>Full Name</label><div class="input-wrap"><svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" value="<?= htmlspecialchars($user['first_name'].' '.$user['last_name']) ?>" readonly style="background:rgba(255,255,255,0.02);color:var(--text-muted);"></div></div>
+ -        <div class="form-group"><label>Date of Birth</label><div class="input-wrap"><svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><input type="text" value="<?= date('d F Y', strtotime($user['dob'])) ?>" readonly style="background:rgba(255,255,255,0.02);color:var(--text-muted);"></div></div>
+ -      </div>
+ -      <div class="form-row-2" style="margin-bottom:16px;">
+ -        <div class="form-group"><label>Age / Gender</label><div class="input-wrap"><svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><input type="text" value="<?= $age ?> yrs / <?= htmlspecialchars($user['gender']) ?>" readonly style="background:rgba(255,255,255,0.02);color:var(--text-muted);"></div></div>
+ -        <div class="form-group"><label>District</label><div class="input-wrap"><svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><input type="text" value="<?= htmlspecialchars($user['district']) ?>" readonly style="background:rgba(255,255,255,0.02);color:var(--text-muted);"></div></div>
+ -      </div>
+ -      <div class="form-row-2">
+ -        <div class="form-group"><label>Club</label><div class="input-wrap"><svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><input type="text" value="<?= htmlspecialchars($user['club_name']) ?>" readonly style="background:rgba(255,255,255,0.02);color:var(--text-muted);"></div></div>
+ -        <div class="form-group"><label>Association</label><div class="input-wrap"><svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><input type="text" value="<?= htmlspecialchars($user['association']) ?>" readonly style="background:rgba(255,255,255,0.02);color:var(--text-muted);"></div></div>
+ -      </div>
+ +    <input type="hidden" id="selectedWeapon" name="selected_weapon" value="">
+ +    <input type="hidden" id="termsAccepted" name="terms_accepted" value="0">
+ +
+ +    <div class="wizard-progress" aria-label="Registration steps">
+ +      <div class="wizard-step-indicator active" data-step="1">1. Weapon</div>
+ +      <div class="wizard-step-indicator" data-step="2">2. Details</div>
+ +      <div class="wizard-step-indicator" data-step="3">3. Category</div>
+ +      <div class="wizard-step-indicator" data-step="4">4. Events</div>
+ +      <div class="wizard-step-indicator" data-step="5">5. Terms</div>
+ +      <div class="wizard-step-indicator" data-step="6">6. Payment</div>
+      </div>
+  
+ -    <!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+ -         PANEL 2 ΓÇô Registration Category
+ +    <!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ=
+ +         STEP 4 ΓÇô Events & Qualifications
+      ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+++<<<<<<< HEAD
+ +    <div class="panel-section wizard-step" id="eventsSection" data-step="4" style="display:none;">
+ +      <div class="panel-section-title">4. Events &amp; Qualifications</div>
+++=======
++     <div class="panel-section">
++       <div class="panel-section-title">2. Select Category</div>
++       <p style="color:var(--text-secondary);font-size:12px;margin-top:-14px;margin-bottom:2px;">Choose your registration category. You can register for <strong>one category per session</strong>.</p>
++ 
++       <!-- Reg ID display -->
++       <div id="genRegIdBadge" style="display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:var(--radius-md);padding:12px 18px;margin-bottom:16px;text-align:center;">
++         <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Registration ID</div>
++         <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--gold-400);letter-spacing:2px;" id="genRegIdValue">ΓÇö</div>
++       </div>
++ 
++       <div class="cat-grid">
++         <button type="button" class="cat-card" onclick="selectCat('ISSF')" id="cat_ISSF">
++           <div class="cc-check" id="chk_ISSF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
++           <div class="cc-icon">≡ƒÅà</div><div class="cc-title">ISSF ΓÇô National</div>
++           <div class="cc-desc">Valid ISSF number required. MPS score validation & certificate upload.</div>
++           <div class="cc-badge">Fee: Γé╣700/event</div>
++         </button>
++         <button type="button" class="cat-card" onclick="selectCat('NR_MQS')" id="cat_NR_MQS">
++           <div class="cc-check" id="chk_NR_MQS"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
++           <div class="cc-icon">≡ƒôï</div><div class="cc-title">NR for MQS</div>
++           <div class="cc-desc">ISSF athletes who attempted MPS but did not meet the minimum score.</div>
++           <div class="cc-badge" style="background:rgba(243,156,18,.15);color:#f39c12;">Fee: Γé╣500/event</div>
++         </button>
++         <button type="button" class="cat-card" onclick="selectCat('NR')" id="cat_NR">
++           <div class="cc-check" id="chk_NR"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
++           <div class="cc-icon">≡ƒÄ»</div><div class="cc-title">NR ΓÇô State Level</div>
++           <div class="cc-desc">State/non-national athletes under Tamil Nadu shooting associations.</div>
++           <div class="cc-badge" style="background:rgba(41,128,185,.15);color:#5dade2;">Fee: Γé╣500/event</div>
++         </button>
++         <button type="button" class="cat-card" onclick="selectCat('PARA_DEAF')" id="cat_PARADEAF" style="<?= !($user['is_para_deaf'] ?? 0) ? 'display:none;' : '' ?>">
++           <div class="cc-check" id="chk_PARADEAF"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
++           <div class="cc-icon">ΓÖ┐</div><div class="cc-title">Para / Deaf</div>
++           <div class="cc-desc">Athletes with physical disabilities or hearing impairment.</div>
++           <div class="cc-badge" style="background:rgba(155,89,182,.15);color:#bb8fce;">Fee: Γé╣500/event</div>
++         </button>
++       </div>
++       <div class="f-err" id="err_cat" style="margin-bottom:10px;font-size:13px;"></div>
++       <input type="hidden" id="selCategory" name="sel_category" value="">
++       <input type="hidden" id="genRegId" name="gen_reg_id" value="">
++     </div>
++ 
++     <!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
++          PANEL 3 ΓÇô Events selection
++     ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
++     <div class="panel-section" id="eventsSection" style="display:none;">
++       <div class="panel-section-title">3. Events &amp; Qualifications</div>
+++>>>>>>> 3c421ce (done till lane allocation)
+        <p style="color:var(--text-secondary);font-size:12px;margin-top:-14px;margin-bottom:20px;">Manage events for this session. Add rows and fill details below.</p>
+  
+        <!-- Category & Age Group Banner info -->
+@@@ -709,9 -550,7 +816,13 @@@
+  const USER_GENDER = '<?= $userGender ?>';
+  const USER_AGE    = <?= $age ?>;
+  const AUTO_AGE_GROUP = '<?= $autoAgeGroup ?>';
+++<<<<<<< HEAD
+ +const IS_PARA      = <?= (int)($user['is_para'] ?? 0) ?>;
+ +const IS_DEAF      = <?= (int)($user['is_deaf'] ?? 0) ?>;
+ +const IS_PARA_DEAF = IS_PARA || IS_DEAF;
+++=======
++ const IS_PARA_DEAF = <?= (int)($user['is_para_deaf'] ?? 0) ?>;
+++>>>>>>> 3c421ce (done till lane allocation)
+  const CURRENT_YEAR = <?= $currentYear ?>;
+  const PREV_YEAR    = <?= $prevYear ?>;
+  
+@@@ -784,116 -623,6 +895,119 @@@ function getUserAgeGroup(age) 
+    return 'super_master';
+  }
+  
+++<<<<<<< HEAD
+ +function isEligibleAgeGroup(userGroup, eventGroup) {
+ +  if (userGroup === eventGroup) return true;
+ +
+ +  if (userGroup === 'sub_youth') {
+ +    return ['youth', 'junior', 'senior'].includes(eventGroup);
+ +  }
+ +  if (userGroup === 'youth') {
+ +    return ['junior', 'senior'].includes(eventGroup);
+ +  }
+ +  if (userGroup === 'junior') {
+ +    return ['senior'].includes(eventGroup);
+ +  }
+ +  if (userGroup === 'master') {
+ +    return ['senior'].includes(eventGroup);
+ +  }
+ +  if (userGroup === 'senior_master') {
+ +    return ['master', 'senior'].includes(eventGroup);
+ +  }
+ +  if (userGroup === 'super_master') {
+ +    return ['senior_master', 'master', 'senior'].includes(eventGroup);
+ +  }
+ +  return false;
+ +}
+ +
+ +function getEventBaseType(label) {
+ +  const u = label.toUpperCase();
+ +  if (u.includes('10M AIR RIFLE STANDING SH1')) return '10m_air_rifle_standing_sh1';
+ +  if (u.includes('10M AIR RIFLE PRONE SH1')) return '10m_air_rifle_prone_sh1';
+ +  if (u.includes('50M RIFLE PRONE SH1')) return '50m_rifle_prone_sh1';
+ +  if (u.includes('50M RIFLE 3 POSITIONS SH1') || u.includes('50M RIFLE 3 POSITION SH1')) return '50m_rifle_3_positions_sh1';
+ +  if (u.includes('10M AIR RIFLE STANDING SH2')) return '10m_air_rifle_standing_sh2';
+ +  if (u.includes('10M AIR RIFLE PRONE SH2')) return '10m_air_rifle_prone_sh2';
+ +  if (u.includes('50M RIFLE PRONE SH2')) return '50m_rifle_prone_sh2';
+ +  if (u.includes('10M AIR PISTOL SH1')) return '10m_air_pistol_sh1';
+ +  if (u.includes('25M PISTOL SH1')) return '25m_pistol_sh1';
+ +  if (u.includes('50M PISTOL SH1')) return '50m_pistol_sh1';
+ +  if (u.includes('10M STANDARD AIR PISTOL SH1')) return '10m_standard_air_pistol_sh1';
+ +
+ +  if (u.includes('10M OPEN SIGHT AIR RIFLE')) return '10m_open_sight_air_rifle';
+ +  if (u.includes('10M AIR RIFLE') || u.includes('10M RIFLE')) return '10m_air_rifle';
+ +  if (u.includes('50M OPEN SIGHT RIFLE PRONE')) return '50m_open_sight_rifle_prone';
+ +  if (u.includes('50M RIFLE PRONE')) return '50m_rifle_prone';
+ +  if (u.includes('50M OPEN SIGHT RIFLE 3 POSITIONS') || u.includes('50M OPEN SIGHT RIFLE 3 POSITION')) return '50m_open_sight_rifle_3_positions';
+ +  if (u.includes('50M RIFLE 3 POSITIONS') || u.includes('50M RIFLE 3 POSITION')) return '50m_rifle_3_positions';
+ +  
+ +  if (u.includes('10M AIR PISTOL') || u.includes('10M PISTOL')) return '10m_air_pistol';
+ +  if (u.includes('25M SPORT PISTOL') || u.includes('25M PISTOL')) return '25m_sport_pistol';
+ +  if (u.includes('25M CENTRE FIRE PISTOL') || u.includes('25M CENTER FIRE PISTOL') || u.includes('25M CENTRE') || u.includes('25M CENTER')) return '25m_centre_fire_pistol';
+ +  if (u.includes('25M STANDARD PISTOL') || u.includes('25M STANDARD')) return '25m_standard_pistol';
+ +  if (u.includes('50M FREE PISTOL') || u.includes('50M PISTOL') || u.includes('50M FREE')) return '50m_free_pistol';
+ +
+ +  return '';
+ +}
+ +
+ +function getAllowedAgeGroupsForEvent(baseType, gender) {
+ +  const g = gender.toUpperCase();
+ +  
+ +  if (baseType === '10m_air_rifle' || baseType === '10m_open_sight_air_rifle' || baseType === '10m_air_pistol') {
+ +    return ['sub_youth', 'youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +  }
+ +  if (baseType === '50m_rifle_prone' || baseType === '50m_rifle_3_positions') {
+ +    return ['youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +  }
+ +  if (baseType === '50m_open_sight_rifle_prone' || baseType === '50m_open_sight_rifle_3_positions') {
+ +    return ['junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +  }
+ +  if (baseType === '25m_sport_pistol') {
+ +    if (g.includes('WOMEN') || g.includes('FEMALE')) {
+ +      return ['youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +    } else {
+ +      return ['youth', 'junior', 'senior'];
+ +    }
+ +  }
+ +  if (baseType === '25m_centre_fire_pistol') {
+ +    return ['senior', 'master', 'senior_master', 'super_master'];
+ +  }
+ +  if (baseType === '25m_standard_pistol') {
+ +    if (g.includes('WOMEN') || g.includes('FEMALE')) {
+ +      return ['junior', 'senior'];
+ +    } else {
+ +      return ['junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +    }
+ +  }
+ +  if (baseType === '50m_free_pistol') {
+ +    return ['junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +  }
+ +  
+ +  // Para/Deaf SH1 / SH2 events
+ +  if (baseType === '10m_air_rifle_standing_sh1' || baseType === '10m_air_pistol_sh1') {
+ +    return ['youth', 'junior', 'senior'];
+ +  }
+ +  if (baseType === '10m_air_rifle_prone_sh1' || baseType === '50m_rifle_prone_sh1' || baseType === '50m_rifle_3_positions_sh1' ||
+ +      baseType === '10m_air_rifle_standing_sh2' || baseType === '10m_air_rifle_prone_sh2' || baseType === '50m_rifle_prone_sh2' ||
+ +      baseType === '25m_pistol_sh1' || baseType === '50m_pistol_sh1' || baseType === '10m_standard_air_pistol_sh1') {
+ +    return ['junior', 'senior'];
+ +  }
+ +
+ +  return ['sub_youth', 'youth', 'junior', 'senior', 'master', 'senior_master', 'super_master'];
+ +}
+ +
+ +function isEventAllowedForUser(eventLabel, eventGender, userAgeGroup) {
+ +  const eventAgeGroup = getEventAgeGroup(eventLabel);
+ +  if (!isEligibleAgeGroup(userAgeGroup, eventAgeGroup)) {
+ +    return false;
+ +  }
+ +  const baseType = getEventBaseType(eventLabel);
+ +  const allowedGroups = getAllowedAgeGroupsForEvent(baseType, eventGender || 'Male');
+ +  return allowedGroups.includes(eventAgeGroup);
+ +}
+ +
+++=======
+++>>>>>>> 3c421ce (done till lane allocation)
+  const USER_AGE_GROUP = getUserAgeGroup(USER_AGE);
+  
+  // All 253 events from the official 51st TN State Shooting Championship 2026 event list
+@@@ -1191,40 -920,25 +1305,62 @@@ const ALL_EVENTS = 
+  // Get events filtered by category, gender, age group, and para/deaf status
+  function getFilteredEvents() {
+    const cat = finalCat;
+++<<<<<<< HEAD
+ +  const weapon = document.getElementById('selectedWeapon')?.value || '';
+ +  return ALL_EVENTS.filter(e => {
+ +    // 1) Category match
+ +    if (!IS_PARA_DEAF) {
+ +      if (cat && e.cats && !e.cats.includes(cat)) return false;
+ +    }
+ +
+ +    // 2) Weapon match
+ +    if (weapon) {
+ +      const group = e.group.toUpperCase();
+ +      if (weapon === 'Rifle' && !group.includes('RIFLE') && !group.includes('RIFLE')) return false;
+ +      if (weapon === 'Pistol' && !group.includes('PISTOL')) return false;
+ +      if (weapon === 'Shotgun' && !group.includes('TRAP') && !group.includes('SKEET') && !group.includes('SHOTGUN')) return false;
+ +    }
+ +
+ +    // 3) Para/Deaf isolation
+ +    const isDeafEvent = e.no.startsWith('DS');
+ +    const isParaEvent = e.no.startsWith('R');
+ +    const isSpecialEvent = isDeafEvent || isParaEvent;
+ +
+ +    if (!IS_PARA_DEAF) {
+ +      if (isSpecialEvent) return false;
+ +    } else {
+ +      if (!isSpecialEvent) return false;
+ +      if (isDeafEvent && !IS_DEAF) return false;
+ +      if (isParaEvent && !IS_PARA) return false;
+ +    }
+ +
+ +    // 4) Gender filter
+ +    if (e.gender === 'All' || USER_GENDER === 'Transgender') return true;
+ +    if (e.gender !== USER_GENDER) return false;
+ +
+ +    // 5) Age group filter (applied to both NR and ISSF events, validating allowed classes per event type)
+ +    if (!isEventAllowedForUser(e.label, e.gender, USER_AGE_GROUP)) return false;
+++=======
++   return ALL_EVENTS.filter(e => {
++     // 1) Category match
++     if (cat && e.cats && !e.cats.includes(cat)) return false;
++ 
++     // 2) Para/Deaf isolation
++     const isEventPara = !!e.is_para;
++     if (IS_PARA_DEAF && !isEventPara) return false;
++     if (!IS_PARA_DEAF && isEventPara) return false;
++ 
++     // 3) Gender filter
++     if (e.gender === 'All' || USER_GENDER === 'Transgender') return true;
++     if (e.gender !== USER_GENDER) return false;
++ 
++     // 4) Age group filter (only for ISSF events, NR/Para events have no age restriction)
++     const eventIsIssf = e.cats && e.cats.includes('ISSF') && !e.cats.includes('NR') && !e.cats.includes('NR_MQS') && !e.cats.includes('PARA_DEAF');
++     if (eventIsIssf) {
++       const eventAgeGroup = getEventAgeGroup(e.label);
++       if (eventAgeGroup !== USER_AGE_GROUP) return false;
++     }
+++>>>>>>> 3c421ce (done till lane allocation)
+  
+      return true;
+    });
+@@@ -1234,7 -948,10 +1370,14 @@@
+  function validateEventAgeGroup(eventValue) {
+    const ev = ALL_EVENTS.find(e => e.value === eventValue);
+    if (!ev) return true;
+++<<<<<<< HEAD
+ +  return isEventAllowedForUser(ev.label, ev.gender, USER_AGE_GROUP);
+++=======
++   const eventIsIssf = ev.cats && ev.cats.includes('ISSF') && !ev.cats.includes('NR') && !ev.cats.includes('NR_MQS');
++   if (!eventIsIssf) return true;
++   const eventAgeGroup = getEventAgeGroup(ev.label);
++   return eventAgeGroup === USER_AGE_GROUP;
+++>>>>>>> 3c421ce (done till lane allocation)
+  }
+  
+  // Weapon type from event name
+@@@ -1269,7 -986,7 +1412,11 @@@ let evtRowCount= 0
+  let generatedRegId = '';
+  
+  // ΓöÇΓöÇ Category Selection ΓöÇΓöÇ
+++<<<<<<< HEAD
+ +function selectCat(cat, isUserClick = false) {
+++=======
++ function selectCat(cat) {
+++>>>>>>> 3c421ce (done till lane allocation)
+    selCat=cat; finalCat=cat;
+    document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('selected'));
+    const card = document.getElementById('cat_'+cat);
+@@@ -1294,7 -1015,7 +1441,11 @@@
+  
+    // Show/hide global fields
+    document.getElementById('sec_issf_num').style.display = isIssfOrMqs ? 'block' : 'none';
+++<<<<<<< HEAD
+ +  // Para fields: always visible for special athletes
+++=======
++   // Show para fields if PARA_DEAF category is selected or athlete is registered as para/deaf
+++>>>>>>> 3c421ce (done till lane allocation)
+    document.getElementById('sec_para_fields').style.display = IS_PARA_DEAF ? 'block' : 'none';
+    // Reset MPS alert when changing category
+    document.getElementById('nrmqsAlert').classList.remove('show');
+@@@ -1953,15 -1567,6 +2104,18 @@@ document.getElementById('masterForm').a
+      }
+    }
+  
+++<<<<<<< HEAD
+ +  // Ensure terms accepted (server also enforces this)
+ +  const termsVal = document.getElementById('termsAccepted').value;
+ +  if (termsVal !== '1') {
+ +    mb.className = 'msg-box show error';
+ +    mb.innerHTML = '<span>Γ£û</span><span>You must accept the terms and conditions before submitting.</span>';
+ +    document.getElementById('termsCheckbox')?.scrollIntoView({behavior:'smooth'});
+ +    return;
+ +  }
+ +
+++=======
+++>>>>>>> 3c421ce (done till lane allocation)
+    // Validate ISSF individual fields
+    let validationError = false;
+    items.forEach((item, idx) => {
+diff --cc register.php
+index 4d48048,f96d225..0000000
+--- a/register.php
++++ b/register.php
+@@@ -116,22 -116,13 +116,32 @@@ $districts = 
+            </div>
+  
+            <!-- 5a. Profile Photo -->
+++<<<<<<< HEAD
+ +          <div class="form-group col-half">
+ +            <label for="photo">Profile Photo <span class="req">*</span></label>
+ +            <div class="upload-container">
+ +              <div class="upload-box" onclick="document.getElementById('photo').click();">
+ +                <div class="upload-box-icon">
+ +                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+ +                </div>
+ +                <div class="upload-box-text">Add Profile Photo</div>
+ +                <div class="upload-box-desc">JPG, PNG, GIF, WebP up to 2MB</div>
+ +                <input type="file" id="photo" name="photo" accept=".jpg,.jpeg,.png,.gif,.webp" data-rules="required" style="display:none;">
+ +              </div>
+ +              <div class="upload-file-info" id="photo_info" style="display:none;">
+ +                <span class="file-name"></span>
+ +                <button type="button" class="file-remove" onclick="clearUpload('photo'); event.stopPropagation();">Γ£û</button>
+ +              </div>
+ +            </div>
+++=======
++           <div class="form-group col-full">
++             <label for="photo">Profile Photo <span class="req">*</span></label>
++             <div class="input-wrap">
++               <svg class="i-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
++               <input type="file" id="photo" name="photo" accept=".jpg,.jpeg,.png,.gif,.webp" data-rules="required" style="padding:8px 42px;">
++             </div>
++             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;padding-left:4px;">JPG, PNG, GIF, WebP ΓÇô max 2MB</div>
+++>>>>>>> 3c421ce (done till lane allocation)
+              <span class="field-error"></span>
+            </div>
+  
+@@@ -185,52 -176,20 +195,67 @@@
+              <span>Special Category</span>
+            </div>
+  
+++<<<<<<< HEAD
+ +          <!-- Para/Deaf Split Yes/No Toggle Buttons -->
+ +          <div class="form-group col-half">
+ +            <label style="color:var(--text-secondary);font-weight:600;margin-bottom:8px;display:block;font-size:13px;">Are you a Para Athlete? <span class="req">*</span></label>
+ +            <div style="display:flex;gap:0;border:1px solid rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;">
+ +              <label id="lbl_para_yes" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(255,255,255,0.03);color:var(--text-muted);border-right:1px solid rgba(255,255,255,0.08);">
+ +                <input type="radio" name="is_para" id="is_para_yes" value="1" style="display:none;" onchange="toggleSpecialLabel('para',true)"> Γ£ô Yes
+ +              </label>
+ +              <label id="lbl_para_no" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(201,168,76,0.12);color:var(--gold-400);">
+ +                <input type="radio" name="is_para" id="is_para_no" value="0" checked style="display:none;" onchange="toggleSpecialLabel('para',false)"> Γ£ù No
+ +              </label>
+ +            </div>
+ +            <span class="field-error"></span>
+ +          </div>
+ +          <div class="form-group col-half">
+ +            <label style="color:var(--text-secondary);font-weight:600;margin-bottom:8px;display:block;font-size:13px;">Are you a Deaf Athlete? <span class="req">*</span></label>
+ +            <div style="display:flex;gap:0;border:1px solid rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;">
+ +              <label id="lbl_deaf_yes" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(255,255,255,0.03);color:var(--text-muted);border-right:1px solid rgba(255,255,255,0.08);">
+ +                <input type="radio" name="is_deaf" id="is_deaf_yes" value="1" style="display:none;" onchange="toggleSpecialLabel('deaf',true)"> Γ£ô Yes
+ +              </label>
+ +              <label id="lbl_deaf_no" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;padding:11px 16px;transition:all .2s;background:rgba(201,168,76,0.12);color:var(--gold-400);">
+ +                <input type="radio" name="is_deaf" id="is_deaf_no" value="0" checked style="display:none;" onchange="toggleSpecialLabel('deaf',false)"> Γ£ù No
+++=======
++           <!-- Para/Deaf -->
++           <div class="form-group col-full">
++             <label>Are you a Para / Deaf athlete? <span class="req">*</span></label>
++             <div class="input-wrap" style="display:flex;gap:16px;padding:10px 14px;">
++               <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;font-weight:400;">
++                 <input type="radio" name="is_para_deaf" value="0" checked> No
++               </label>
++               <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;font-weight:400;">
++                 <input type="radio" name="is_para_deaf" value="1"> Yes
+++>>>>>>> 3c421ce (done till lane allocation)
+                </label>
+              </div>
+              <span class="field-error"></span>
+            </div>
+  
+++<<<<<<< HEAD
+ +          <!-- Disability Proof Certificate (Visible/Required only if is_para or is_deaf is Yes) -->
+ +          <div class="form-group col-full" id="disability_proof_group" style="display:none;">
+ +            <label for="disability_proof">Disability Certificate / Proof <span class="req">*</span></label>
+ +            <div class="upload-container">
+ +              <div class="upload-box" onclick="document.getElementById('disability_proof').click();">
+ +                <div class="upload-box-icon">
+ +                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+ +                </div>
+ +                <div class="upload-box-text">Add Disability Certificate</div>
+ +                <div class="upload-box-desc">JPG, PNG or PDF up to 2MB</div>
+ +                <input type="file" id="disability_proof" name="disability_proof" accept=".jpg,.jpeg,.png,.pdf" style="display:none;">
+ +              </div>
+ +              <div class="upload-file-info" id="disability_proof_info" style="display:none;">
+ +                <span class="file-name"></span>
+ +                <button type="button" class="file-remove" onclick="clearUpload('disability_proof'); event.stopPropagation();">Γ£û</button>
+ +              </div>
+ +            </div>
+ +            <span class="field-error"></span>
+ +          </div>
+ +
+++=======
+++>>>>>>> 3c421ce (done till lane allocation)
+            <!-- ΓöÇΓöÇ SECTION: Club & Affiliation ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ -->
+            <div class="section-divider col-full">
+              <span>Club &amp; Association</span>
+diff --cc sql/database.sql
+index 716fa36,d64d316..0000000
+--- a/sql/database.sql
++++ b/sql/database.sql
+@@@ -21,11 -21,8 +21,15 @@@ CREATE TABLE IF NOT EXISTS `registratio
+    `email`               VARCHAR(180)  NOT NULL UNIQUE,
+    `phone`               VARCHAR(15)   NOT NULL,
+    `aadhaar_number`      VARCHAR(12)   NOT NULL UNIQUE,
+++<<<<<<< HEAD
+ +  `is_para`             TINYINT(1)    NOT NULL DEFAULT 0,
+ +  `is_deaf`             TINYINT(1)    NOT NULL DEFAULT 0,
+++=======
++   `is_para_deaf`        TINYINT(1)    NOT NULL DEFAULT 0 COMMENT '1=Para/Deaf athlete, 0=Regular',
+++>>>>>>> 3c421ce (done till lane allocation)
+    `club_name`           VARCHAR(200)  NOT NULL,
+ +  `membership_id`       VARCHAR(100)  NULL DEFAULT NULL,
+ +  `membership_doc`      VARCHAR(500)  NULL DEFAULT NULL COMMENT 'Membership photo or PDF path',
+    `dob`                 DATE          NOT NULL,
+    `gender`              ENUM('Male','Female','Transgender') NOT NULL,
+    `district`            VARCHAR(100)  NOT NULL,
+diff --cc sql/migration.sql
+index e70b2d7,d92e24b..0000000
+--- a/sql/migration.sql
++++ b/sql/migration.sql
+@@@ -3,5 -2,12 +3,17 @@@
+  USE `ssa_championship`;
+  
+  ALTER TABLE `registrations`
+++<<<<<<< HEAD
+ +MODIFY COLUMN `reg_id` VARCHAR(20) NULL DEFAULT NULL
+- COMMENT 'Auto-generated Registration ID (generated on event registration)';
+++COMMENT 'Auto-generated Registration ID (generated on event registration)';
+++=======
++   MODIFY COLUMN `reg_id` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Auto-generated Registration ID (generated on event registration)';
++ 
++ ALTER TABLE `event_registrations`
++   ADD COLUMN IF NOT EXISTS `match_no` VARCHAR(30) NULL DEFAULT NULL COMMENT 'Auto-detected match number' AFTER `event_code`,
++   ADD COLUMN IF NOT EXISTS `competition_name` VARCHAR(200) NULL DEFAULT NULL COMMENT 'Competition name (ISSF only)' AFTER `match_no`,
++   ADD COLUMN IF NOT EXISTS `shooting_year` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Qualification year(s)' AFTER `competition_name`;
++ 
++ ALTER TABLE `registrations`
++   ADD COLUMN IF NOT EXISTS `photo` VARCHAR(500) NULL DEFAULT NULL COMMENT 'Profile photo path' AFTER `address`;
+++>>>>>>> 3c421ce (done till lane allocation)
+diff --cc sql/session_schema.sql
+index 8f26ac5,99fe719..0000000
+--- a/sql/session_schema.sql
++++ b/sql/session_schema.sql
+@@@ -1,29 -1,52 +1,56 @@@
+ --- ============================================================
+ --- Registration Sessions & Payment Schema
+ --- 51st Tamil Nadu Shooting Championship
+ --- ============================================================
+ -
+  USE `ssa_championship`;
+  
+ --- ΓöÇΓöÇ Sessions: Groups multiple events into one payment ΓöÇΓöÇ
+  CREATE TABLE IF NOT EXISTS `registration_sessions` (
+++<<<<<<< HEAD
+ +  `id` INT NOT NULL AUTO_INCREMENT,
+ +  `session_id` VARCHAR(30) NOT NULL UNIQUE,
+ +  `user_id` INT NOT NULL,
+ +  `total_amount` DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+ +  `payment_screenshot` VARCHAR(500) NULL DEFAULT NULL,
+ +  `payment_status` ENUM('unpaid','uploaded','verified') NOT NULL DEFAULT 'unpaid',
+ +  `approval_status` ENUM('pending','approved','rejected','draft') NOT NULL DEFAULT 'pending',
+ +  `admin_remarks` TEXT NULL DEFAULT NULL,
+ +  `approved_by` INT NULL DEFAULT NULL,
+ +  `approved_at` DATETIME NULL DEFAULT NULL,
+ +  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ +  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+++=======
++   `id`                 INT(11)       NOT NULL AUTO_INCREMENT,
++   `session_id`         VARCHAR(30)   NOT NULL UNIQUE COMMENT 'e.g. SSA51TN-PAY-0001',
++   `user_id`            INT(11)       NOT NULL,
++   `total_amount`       DECIMAL(8,2)  NOT NULL DEFAULT 0.00,
++   `payment_screenshot` VARCHAR(500)  NULL DEFAULT NULL,
++   `payment_status`     ENUM('unpaid','uploaded','verified') NOT NULL DEFAULT 'unpaid',
++   `approval_status`    ENUM('pending','approved','rejected','draft') NOT NULL DEFAULT 'pending',
++   `admin_remarks`      TEXT          NULL DEFAULT NULL,
++   `approved_by`        INT(11)       NULL DEFAULT NULL,
++   `approved_at`        DATETIME      NULL DEFAULT NULL,
++   `created_at`         DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
++   `updated_at`         DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+++>>>>>>> 3c421ce (done till lane allocation)
+    PRIMARY KEY (`id`),
+ -  FOREIGN KEY (`user_id`)     REFERENCES `registrations`(`id`) ON DELETE CASCADE,
+ -  FOREIGN KEY (`approved_by`) REFERENCES `admins`(`id`)         ON DELETE SET NULL,
+ -  INDEX `idx_sess_user`   (`user_id`),
+ -  INDEX `idx_sess_status` (`approval_status`),
+ -  INDEX `idx_sess_pay`    (`payment_status`)
+ +  FOREIGN KEY (`user_id`) REFERENCES `registrations`(`id`) ON DELETE CASCADE,
+ +  FOREIGN KEY (`approved_by`) REFERENCES `admins`(`id`) ON DELETE SET NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  
+++<<<<<<< HEAD
+ +ALTER TABLE `event_registrations`
+ +ADD COLUMN `entry_fee` DECIMAL(8,2) NOT NULL DEFAULT 0.00;
+++=======
++ -- ΓöÇΓöÇ Add session_id, certificate_path & entry_fee to event_registrations ΓöÇΓöÇ
++ ALTER TABLE `event_registrations`
++   ADD COLUMN IF NOT EXISTS `session_id` INT(11) NULL DEFAULT NULL AFTER `id`,
++   ADD COLUMN IF NOT EXISTS `certificate_path` VARCHAR(500) NULL DEFAULT NULL AFTER `competition_name`,
++   ADD COLUMN IF NOT EXISTS `entry_fee`  DECIMAL(8,2) NOT NULL DEFAULT 0.00;
++ 
++ -- Add 'draft' status to event_registrations.status ENUM
++ ALTER TABLE `event_registrations`
++   MODIFY COLUMN `status` ENUM('pending','approved','rejected','draft') NOT NULL DEFAULT 'pending';
+++>>>>>>> 3c421ce (done till lane allocation)
+  
+ --- Add FK if it doesn't exist (ignore error if already exists)
+ -SET @x = (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS
+ -  WHERE CONSTRAINT_SCHEMA = 'ssa_championship'
+ -  AND TABLE_NAME = 'event_registrations'
+ -  AND CONSTRAINT_NAME = 'fk_evtreg_session');
+ -
+ -SET @sql = IF(@x = 0,
+ -  'ALTER TABLE event_registrations ADD CONSTRAINT fk_evtreg_session FOREIGN KEY (session_id) REFERENCES registration_sessions(id) ON DELETE SET NULL',
+ -  'SELECT 1');
+ +ALTER TABLE `event_registrations`
+ +ADD COLUMN `session_id` INT NULL AFTER `user_id`,
+ +ADD CONSTRAINT `fk_evtreg_session` FOREIGN KEY (`session_id`) REFERENCES `registration_sessions`(`id`) ON DELETE CASCADE;
+  
+ -PREPARE stmt FROM @sql;
+ -EXECUTE stmt;
+ -DEALLOCATE PREPARE stmt;
+ +ALTER TABLE `event_registrations`
+ +MODIFY COLUMN `status` ENUM('pending','approved','rejected','draft') NOT NULL DEFAULT 'pending';

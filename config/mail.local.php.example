@@ -1,0 +1,14 @@
+<?php
+/**
+ * Local Mail Configuration Override Template
+ * Copy this file to config/mail.local.php and configure for your local system.
+ * mail.local.php is ignored by Git, so your local settings will not be committed or overwritten.
+ */
+
+define('MAIL_HOST',     'smtp.gmail.com');
+define('MAIL_PORT',     587);                  // 587 for TLS, 465 for SSL
+define('MAIL_USERNAME', 'your_email@gmail.com'); // Sender email
+define('MAIL_PASSWORD', 'your_app_password');    // SMTP password
+define('MAIL_FROM',     'your_email@gmail.com');
+define('MAIL_FROM_NAME','SSA – Local Override');
+define('MAIL_ENCRYPTION', 'tls');              // 'tls' or 'ssl'

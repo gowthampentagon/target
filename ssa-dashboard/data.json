@@ -1,0 +1,88 @@
+{
+    "news": [
+        {
+            "id": 1,
+            "title": "51st TN State Shooting Championship Portal Open",
+            "date": "Jul 2026",
+            "img": "../images/gallery/ssa_gallery_1.jpg",
+            "excerpt": "Online registration is officially active! Shooters can log in to their profile portal to verify configurations, register for matches, select relays, and pay fees.",
+            "body": "<p>The online registrations for the highly anticipated <strong>51st Tamil Nadu State Shooting Championship</strong> have officially commenced.</p><p>Participating competitors must sign in to the registration portal using their verified credentials. Once logged in, you can verify your profile documents, choose matches under Pistol/Rifle categories, allocate preferred target lanes, configure relays, and complete the registration fee payment online.</p><p>Please note that entries are strictly online-only, and registrations will close on the scheduled deadline. Make sure to complete your profile verification early to avoid delays.</p>"
+        },
+        {
+            "id": 2,
+            "title": "Summer Elite Training Camp Concludes with Record Turnout",
+            "date": "Jun 2026",
+            "img": "../images/gallery/ssa_action_1.jpg",
+            "excerpt": "Our summer elite diagnostics and shooting camps wrapped up this week. Over 80 junior athletes participated under the strict guidance of national instructors.",
+            "body": "<p>Saragarhi Shooting Academy is thrilled to declare another highly successful completion of our annual <strong>Summer Elite Training Camp</strong>.</p><p>The program, which ran for three weeks, welcomed over 80 junior athletes from across the state. Under the rigorous coaching of ISSF-certified coaches and sports psychologists, the participants received direct instruction on posture alignment, breathing control, match preparation, and advanced electronic scoring feedback analysis.</p><p>A mock tournament held on the final day demonstrated exceptional scores, with several junior shooters matching national qualification benchmarks.</p>"
+        },
+        {
+            "id": 3,
+            "title": "New 10m Air Range Laser Target Systems Active",
+            "date": "May 2026",
+            "img": "../images/gallery/ssa_range_2.jpg",
+            "excerpt": "Upgraded range targets feature sub-millimeter diagnostics accuracy. Immediate shot detection monitors are now fully configured for all shooters.",
+            "body": "<p>Continuing our dedication to integrating state-of-the-art training aids, Saragarhi Shooting Academy has successfully configured and activated new <strong>Electronic Scoring Targets (EST)</strong> across all 10m indoor shooting lanes.</p><p>The newly installed lasers provide sub-millimeter acoustic detection feedback, translating into instant shot placement mapping displayed on individual shooter lane monitors. The software diagnostics track shot group consistency and timing patterns to help coaches analyze trigger follow-through with microscopic precision.</p><p>These ranges are fully active starting this week and are calibrated exactly to match ISSF competition standards.</p>"
+        },
+        {
+            "id": 4,
+            "title": "51st TN State Shooting Championship Portal Open",
+            "date": "jul 2026",
+            "img": "../uploads/dashboard/1784465178_WhatsApp_Image_2026-07-14_at_3.33.39_PM.jpeg",
+            "excerpt": "The online registrations for the highly anticipated 51st Tamil Nadu State Shooting Championship have officially commenced.",
+            "body": "The online registrations for the highly anticipated 51st Tamil Nadu State Shooting Championship have officially commenced.\r\n\r\nParticipating competitors must sign in to the registration portal using their verified credentials. Once logged in, you can verify your profile documents, choose matches under Pistol/Rifle categories, allocate preferred target lanes, configure relays, and complete the registration fee payment online.\r\n\r\nPlease note that entries are strictly online-only, and registrations will close on the scheduled deadline. Make sure to complete your profile verification early to avoid delays."
+        }
+    ],
+    "gallery": [
+        {
+            "img": "../images/gallery/ssa_range_1.jpg",
+            "title": "50m Rifle Range",
+            "desc": "Fully equipped electronic targets for match practice."
+        },
+        {
+            "img": "../images/gallery/ssa_gallery_3.jpg",
+            "title": "10m Air Pistol Arena",
+            "desc": "Climate-controlled indoor arena with high accuracy systems."
+        },
+        {
+            "img": "../images/gallery/ssa_action_2.jpg",
+            "title": "Precision Practice",
+            "desc": "Real-time biomechanics feedback tracking shooter trigger weight."
+        },
+        {
+            "img": "../uploads/dashboard/1784465717_WhatsApp_Image_2026-07-14_at_3.33.39_PM.jpeg",
+            "title": "TN ASSOCIATION LOGO",
+            "desc": ""
+        }
+    ],
+    "events": [
+        {
+            "id": 1,
+            "title": "51st TN State Shooting Championship",
+            "date": "July 15 - July 22, 2026",
+            "venue": "Guru Nanak College Shooting Range, Chennai",
+            "desc": "The state's premier shooting event featuring Rifle, Pistol, and Para categories. Register via the portal to secure your relay slot."
+        },
+        {
+            "id": 2,
+            "title": "National Selection Trials",
+            "date": "August 5 - August 12, 2026",
+            "venue": "Saragarhi Academy Main Range",
+            "desc": "Elite national selection trials for ISSF category shooters. Biometric and biomechanics feedback tracking will be active on all lanes."
+        },
+        {
+            "id": 3,
+            "title": "Monthly Club Pistol Tournament",
+            "date": "July 28, 2026",
+            "venue": "10m Air Pistol Arena",
+            "desc": "Local monthly championship for academy members to test speed, focus, and precision. Walk-in entries permitted for members."
+        },
+        {
+            "id": 4,
+            "title": "51st TN State Shooting Championship",
+            "date": "July 27 - August 2, 2026",
+            "venue": "Guru Nanak College Shooting Range, Chennai",
+            "desc": "The state's premier shooting event featuring Rifle, Pistol, and Para categories. Register via the portal to secure your relay slot."
+        }
+    ]
+}

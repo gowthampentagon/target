@@ -1,0 +1,4 @@
+# Pyrefly configuration for SSA project
+# Points Pyrefly to the correct Python interpreter so it can resolve installed packages like cv2
+
+python_interpreter = "C:\\Users\\gowth\\AppData\\Local\\Programs\\Python\\Python314\\python.exe"
